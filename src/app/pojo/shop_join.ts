@@ -1,0 +1,40 @@
+import { City } from '../pojo/city';
+import { WifiStation } from '../pojo/wifistation';
+import { StatusDiscount } from '../pojo/statusdiscount';
+import { ShopType } from '../pojo/shopType';
+import { Person } from '../pojo/person';
+import { Pos } from '../pojo/pos';
+
+export interface ShopJoin {
+  id: string;
+  state: string;
+  name: string;
+  audience : string;
+  photoPath: string[];
+  statusDiscount: StatusDiscount;
+  shopType: ShopType;
+  owner: Person;
+  website: string;
+  adult: boolean;
+  brn: string;
+  vatNumber: string;
+  tradeName: string;
+  plan: string;
+  hasLoyalty: boolean;
+  currencyAmount: number;
+  pointAmount: number;
+  loyaltyShopId: string;
+  logisticProviders: {[key: string]: boolean};
+  freeShippingEnabled: boolean;
+  freeShippingThreshold: number;
+  handlingFeeEnabled: boolean;
+  handlingFeeAmount: number;
+  noHandlingFeeEnabled: boolean;
+  noHandlingFeeThreshold: number;
+  onlineCatalogButton: boolean;
+  catalogButton: boolean;
+  buyNowButton: boolean;
+  isFeatured: boolean;
+  mainCategories: {[key: string]: boolean};
+  posList: Pos[];
+}

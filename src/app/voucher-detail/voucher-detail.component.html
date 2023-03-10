@@ -1,0 +1,231 @@
+<p-growl [value]="msgs"></p-growl>
+
+<!-- div *ngIf="voucher" -->
+<div>
+  <md-card>
+    <h3> {{voucher.name}}</h3>
+
+
+    <form id="userformVoucher">
+
+      <div style="display:flex;flex-direction:row;justify-content:space-between;">
+
+
+
+        <div *ngIf="voucher.id && (voucherUsageList.length>0)" class="form-group" [formGroup]="userformVoucher">
+          <label for="initiator">Initiator</label>
+          <input class="form-control" formControlName="initiator" type="text" name="initiator"
+            value="{{voucher.fullnameInitiator}}">
+        </div>
+
+        <div *ngIf="!voucher.id || voucherUsageList.length==0" class="form-group" [formGroup]="userformVoucher">
+          <label for="initiator">Initiator</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <select formControlName="initiator" (change)="onInitiatorChange($event.target.value)" class="form-control"
+            id="initiator" required [(ngModel)]="voucher.idInitiator" name="public">
+            <option *ngFor="let shopAdmin of shopAdmins" [value]="shopAdmin.id">{{shopAdmin.fName}} {{shopAdmin.lName}}
+            </option>
+          </select>
+          <control-messages [control]="userformVoucher.controls.initiator"></control-messages>
+        </div>
+
+
+        <div [formGroup]="userformVoucher" class="form-group" style="flex-grow:2; margin:0px 15px 0px 15px">
+          <label for="name">Name</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <input style="width: 100%; height: 38px;" formControlName="name" id="name" [(ngModel)]="voucher.name" />
+          <control-messages [control]="userformVoucher.controls.name"></control-messages>
+        </div>
+
+
+        <div [formGroup]="userformVoucher" class="form-group" style="flex-grow:0">
+          <label for="value">Value</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <input style="width: 100%;height: 38px;" type="number" formControlName="value" id="value"
+            [(ngModel)]="+voucher.voucherValue" />
+          <control-messages [control]="userformVoucher.controls.value"></control-messages>
+        </div>
+
+
+      </div>
+
+      <div [formGroup]="userformVoucher">
+        <div style="display:flex;flex-direction:row;">
+
+          <div class="form-group">
+            <label for="validityDate">Validity Date</label>
+            <div class="tooltip">*<span class="tooltiptext">Required</span></div><br />
+            <ng2-datepicker [options]="validityDateOptions" formControlName="validityDate" id="validityDate"
+              [(ngModel)]="validityDateModel" expanded="true" class="form-control"></ng2-datepicker>
+            <control-messages [control]="userformVoucher.controls.validityDate"></control-messages>
+          </div>
+          <div style="width: 15px"></div>
+          <div class="form-group">
+            <label for="control-label">Use Voucher Code</label>
+            <select class="form-control" formControlName="useVoucherCode">
+              <option [ngValue]="true">Enable</option>
+              <option [ngValue]="false">Disabled</option>
+            </select>
+          </div>
+          <div style="width: 15px"></div>
+          <div class="form-group">
+            <label for="voucher_code_type">Code Type</label>
+            <select class="form-control" id="voucher_code_type" formControlName="useSingleVoucherCode">
+              <option [ngValue]="false">Multiple</option>
+              <option [ngValue]="true">Single</option>
+            </select>
+          </div>
+          <div style="width: 15px"></div>
+          <div class="form-group" *ngIf="useSingleVoucherCode">
+            <label for="singleVoucherCode">Voucher Code</label>
+            <input class="form-control" type="text" formControlName="singleVoucherCode" id="singleVoucherCode" />
+          </div>
+        </div>
+
+        <!--
+        <div class="form-group" style="display:flex;flex-direction:column;">
+          <label for="payDate">Pay Date</label>
+          <datepicker [viewFormat]="DD/MM/YYYY" formControlName="payDate" id="payDate" [(ngModel)]="payDate" [expanded]="voucher.payDate>0"></datepicker>
+        </div>
+
+        <div class="form-group" style="display:flex;flex-direction:column;">
+          <label for="consumedDate">Consumed Date</label>
+          <span *ngIf="voucher.consumedDate>0">
+              <datepicker [viewFormat]="DD/MM/YYYY" formControlName="consumedDate" id="consumedDate" [(ngModel)]="consumedDate" [expanded]="true"></datepicker>
+          </span>
+          <span *ngIf="voucher.consumedDate==0" style="background-color:orange">
+              Not consumed yet
+          </span>
+        </div>                
+
+-->
+      </div>
+
+
+    </form>
+
+  </md-card>
+
+  <md-card>
+    <div style="display:flex;flex-direction:row;justify-content:space-around;">
+      <div>
+        <button md-raised-button color="warn" (click)="onDelete()"
+          [disabled]="!voucher.id || voucherUsageList.length>0">Delete</button>
+        <button md-raised-button color="primary" (click)="onCancel();"
+          [disabled]="!voucher.id || !userformVoucher.dirty">Cancel</button>
+        <button md-raised-button color="primary" (click)="saveVoucher()"
+          [disabled]="!userformVoucher.valid  || !userformVoucher.dirty || !validityDateModel.momentObj">Save</button>
+      </div>
+    </div>
+  </md-card>
+
+  <md-card>
+    <H3>Distribute voucher to users</H3>
+    <p-fileUpload (onSelect)="fileUserUploadSelect($event)" #aFileUpload (onError)="fileUserUploadError($event)"
+      (onUpload)="fileUserUploaded($event)" (onBeforeSend)="fileUserPrepSendRequest($event)" chooseLabel="Select list"
+      uploadLabel="Distribute" accept=".csv"
+      [disabled]="!voucher || !voucher.id || voucher.validityDate < now || role!=='ADMIN'">
+      <template pTemplate type="content">
+        <ul *ngIf="voucherDistResult.length">
+          <li *ngFor="let result of voucherDistResult">{{result.file}} : distributed ({{result.distributed}}) doublons
+            ({{result.doublon}}) not found ({{result.notFound}}) </li>
+        </ul>
+      </template>
+    </p-fileUpload>
+    <div style="padding: 16px 0">
+      <button [disabled]="distributeToAllDisabled" md-raised-button color="primary" (click)="distributeToAll($event, voucher)">Distribute to All</button>
+    </div>
+  </md-card>
+
+  <md-card *ngIf="isAdmin">
+    <label>Nb beneficiaries {{voucherUsageList.length}}</label>
+    <button md-raised-button color="primary" style="float:right" type="button" (click)="dt.exportCSV()"> <i
+        class="fa fa-download" aria-hidden="true" style="margin:0px 5px 0px 0px"></i></button>
+
+    <p-dataTable #dt [value]="voucherUsageList" sortMode="multiple" [rows]="10" [paginator]="true" [pageLinks]="3"
+      [rowsPerPageOptions]="[10,20]" selectionMode="single" resizableColumns="">
+
+      <p-column [hidden]="true" field="id" header="ID"></p-column>
+
+      <p-column field="payDate" header="Pay date" [sortable]="true">
+        <template let-voucherUsage="rowData" pTemplate type="body">
+          <span *ngIf="voucherUsage.payDate !== 0">{{voucherUsage.payDate | date:'dd/MM/yyyy' }} </span>
+          <span *ngIf="voucherUsage.payDate === 0">NOT PAID YET</span>
+        </template>
+      </p-column>
+
+      <p-column field="usedDate" header="Usage date" [sortable]="true">
+        <template let-voucherUsage="rowData" pTemplate type="body">
+          <span *ngIf="voucherUsage.usedDate !== 0">{{voucherUsage.usedDate | date:'dd/MM/yyyy' }} </span>
+          <span *ngIf="voucherUsage.usedDate === 0">NOT USED YET</span>
+        </template>
+      </p-column>
+
+      <p-column field="fName" header="Name" [sortable]="true">
+        <template let-voucherUsage="rowData" pTemplate type="body">
+          <span>{{voucherUsage.fName}} {{voucherUsage.lName}}</span>
+        </template>
+      </p-column>
+
+      <p-column *ngIf="isAdmin" field="email" header="Email" [sortable]="false"></p-column>
+
+    </p-dataTable>
+
+  </md-card>
+
+  <div *ngIf="useVoucherCode">
+    <md-card>
+      <H3>Voucher Codes</H3>
+      <div *ngIf="!useSingleVoucherCode">
+        <p-fileUpload (onSelect)="selectVoucherCode($event)" #voucheCodeFileUpload
+          (onError)="voucherCodeUploadError($event)" (onUpload)="voucherCodeFileUpload($event)"
+          (onBeforeSend)="voucherCodeBeforeSend($event)" chooseLabel="Select voucher code list" uploadLabel="Upload"
+          accept=".csv" [disabled]="!voucher || !voucher.id || voucher.validityDate < now || role!=='ADMIN'">
+        </p-fileUpload>
+      </div>
+      <div *ngIf="useSingleVoucherCode">
+        <div class="form-inline" [formGroup]="quantityForm">
+          <div class="form-group">
+            <input type="number" class="form-control" id="single_voucher_add_quantity" placeholder="Ex. 50"
+              formControlName="quantity">
+          </div>
+          &nbsp;
+          <button class="btn btn-default" (click)="addQuantity()">Add to quantity available</button>
+        </div>
+      </div>
+    </md-card>
+
+    <md-card *ngIf="voucher && voucher.id && showVoucherCodeListSpinner">
+      <p>Please wait. Loading voucher code list...</p>
+    </md-card>
+
+    <div *ngIf="voucher && voucher.id && (codes$ | async)">
+      <md-card ng-if="codes.length>0">
+        <label>Nb voucher codes {{codes.length}}</label>
+        <button md-raised-button color="primary" style="float:right" type="button" (click)="dt2.exportCSV()"> <i
+            class="fa fa-download" aria-hidden="true" style="margin:0px 5px 0px 0px"></i></button>
+        <p-dataTable #dt2 [value]="codes" sortMode="multiple" [rows]="10" [paginator]="true" [pageLinks]="3"
+          [rowsPerPageOptions]="[10,20]" selectionMode="single" resizableColumns="">
+          <p-column field="code" header="Code" [sortable]="true"></p-column>
+          <p-column field="usedDate" header="Usage date" [sortable]="true">
+            <template let-code="rowData" pTemplate type="body">
+              <span *ngIf="code.usedDate">{{code.usedDate | date:'dd/MM/yyyy' }} </span>
+              <span *ngIf="!code.usedDate">NOT USED YET</span>
+            </template>
+          </p-column>
+          <p-column field="fName" header="Name" [sortable]="true">
+            <template let-code="rowData" pTemplate type="body">
+              <span *ngIf="code.user">{{code.user.fName}} {{code.user.lName}}</span>
+            </template>
+          </p-column>
+
+          <p-column *ngIf="isAdmin" field="email" header="Email" [sortable]="false">
+            <template let-code="rowData" pTemplate type="body">
+              <span *ngIf="code.user">{{code.user.email}}</span>
+            </template>
+          </p-column>
+        </p-dataTable>
+      </md-card>
+    </div>
+  </div>
+</div>

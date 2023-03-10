@@ -1,0 +1,49 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="paymentConfigs">
+  <md-card>
+    <div style="display:flex;flex-direction:row;">
+      <div>
+        <button md-raised-button color="primary" (click)="onGoBack()">Back</button>
+      </div>
+
+      <div style="flex-grow:1; justify-content:center">
+        <h3 style="text-align:center" *ngIf="shop"> {{shop.name}} </h3>
+      </div>
+    </div>
+  </md-card>
+
+  <form>
+    <md-card style="margin-top: 10px;" *ngFor="let op of paymentConfigs">
+      <h3>{{ op.name }}</h3>
+      <div class="form-group">
+        <label for="form_op_{{ op.gateway }}_enabled">Status</label>
+        <select class="form-control" id="form_op_{{ op.gateway }}_enabled" [(ngModel)]="op.enabled"
+          name="form_op_{{ op.gateway }}_enabled">
+          <option [value]="true">Active</option>
+          <option [value]="false">Inactive</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="op.gateway === 'mcb'">
+        <label for="form_op_{{ op.gateway }}_merchant_display_name">Merchant Display Name</label>
+        <input type="text" class="form-control" id="form_op_{{ op.gateway }}_merchant_display_name"
+          [(ngModel)]="op.merchantDisplayName" name="form_op_{{ op.gateway }}_merchant_display_name">
+      </div>
+      <div class="form-group" *ngIf="op.gateway === 'mcb'">
+        <label for="form_op_{{ op.gateway }}_merchant_id">Merchant ID</label>
+        <input type="text" class="form-control" id="form_op_{{ op.gateway }}_merchant_id" [(ngModel)]="op.merchantId"
+          name="form_op_{{ op.gateway }}_merchant_id">
+      </div>
+      <div class="form-group" *ngIf="op.gateway === 'mcb'">
+        <label for="form_op_{{ op.gateway }}_merchant_username">Merchant Username</label>
+        <input type="text" class="form-control" id="form_op_{{ op.gateway }}_merchant_username"
+          [(ngModel)]="op.merchantUsername" name="form_op_{{ op.gateway }}_merchant_username">
+      </div>
+      <div class="form-group" *ngIf="op.gateway === 'mcb'">
+        <label for="form_op_{{ op.gateway }}_merchant_api_password">Merchant API Password</label>
+        <input type="password" class="form-control" id="form_op_{{ op.gateway }}_merchant_api_password"
+          [(ngModel)]="op.merchantApiPassword" name="form_op_{{ op.gateway }}_merchant_api_password">
+      </div>
+    </md-card>
+  </form>
+</div>

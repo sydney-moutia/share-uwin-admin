@@ -1,0 +1,43 @@
+<md-card>
+  <div style="display:flex;flex-direction:row;">
+    <div>
+      <app-go-back-button></app-go-back-button>
+    </div>
+
+    <div style="flex-grow:1; justify-content:center">
+      <h3 style="text-align:center"> Categories</h3>
+    </div>
+
+    <div>
+      <button md-raised-button color="primary" (click)="download()">Download</button>
+    </div>
+  </div>
+</md-card>
+
+<md-card>
+  <H3>Update categories</H3>
+  <p-fileUpload #aFileUpload (onError)="onFileError($event)" (onUpload)="onUploadFile($event)" (onBeforeSend)="onPrepSendRequestFile($event)" chooseLabel="Select file" uploadLabel="Upload" accept=".csv">
+    <template pTemplate type="content">
+      <!-- <ul *ngIf="voucherDistResult.length">
+        <li *ngFor="let result of voucherDistResult">{{result.file}} : distributed ({{result.distributed}}) doublons
+          ({{result.doublon}}) not found ({{result.notFound}}) </li>
+      </ul> -->
+    </template>
+  </p-fileUpload>
+</md-card>
+
+
+
+<div style="display:flex;flex-direction:column; margin-top: 16px;" *ngIf="categories$ | async">
+  <div>
+    <p-dataTable [value]="subcategories" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3"
+      [rowsPerPageOptions]="[20,40,80]" selectionMode="single">
+      <p-column field="categoryName" header="Category" [sortable]="true"></p-column>
+      <p-column field="name" header="Subcategory" [sortable]="true"></p-column>
+    </p-dataTable>
+  </div>
+</div>
+
+<div *ngIf="showPreloader">
+  <p style="text-align: center; padding: 16px;">One monent please.</p>
+</div>

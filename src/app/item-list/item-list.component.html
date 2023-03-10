@@ -1,0 +1,45 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="shopName" style="display:flex;justify-content:center;flex-direction:row">
+      <h1>{{shopName}}</h1> 
+</div>
+
+
+<md-card>
+    <div style="display:flex;flex-direction:row;">
+        <div>
+            <button md-raised-button color="primary" (click)="onGoBack()" >Back</button>
+        </div>
+
+        <div style="flex-grow:1; justify-content:center">
+            <h3 style="text-align:center"> Shop's item listing
+                <span (click)="onNewItem()" style="cursor:pointer">
+                    <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+                </span>
+            </h3>
+        </div>
+    </div>
+
+</md-card>
+
+<div *ngIf="idShop">
+
+    <div style="display:flex;flex-direction:column;">
+
+        <div >
+
+            <p-dataTable [value]="items" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,40,80]"
+                selectionMode="single" [(selection)]="selectedItem" (onRowSelect)="onRowSelect($event)" [globalFilter]="gb" resizableColumns="">
+                <p-column field="name" header="Name" [sortable]="true"></p-column>
+                <p-column field="price" header="Price" [sortable]="true"></p-column>
+            </p-dataTable>
+        </div>
+
+
+        <div >
+
+            <app-item-detail [idShop]="idShop" [item]="selectedItem" [itemList] = "items"  ></app-item-detail>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,297 @@
+<p-growl [value]="msgs"></p-growl>
+
+
+<md-card>
+  <div style="display:flex;flex-direction:row;">
+    <div>
+      <button md-raised-button color="primary" (click)="onGoBack()">Back</button>
+    </div>
+    <div style="text-align: center;flex-grow:1;">
+      <h3 style="text-align:center"> User Listing</h3>
+    </div>
+  </div>
+</md-card>
+
+
+
+
+<form id="couponform">
+
+  <div style="display:flex;flex-direction:column;">
+
+    <md-card class="centered">
+      <div style="text-align:left">
+        <h4> Filters </h4>
+      </div>
+      <br />
+
+      <div style="display:flex;flex-direction:row;justify-content:space-between">
+        <div class="form-group" style="text-align: left;">
+          <md-checkbox name="showStatus" binary="true" [(ngModel)]="showStatus">Status</md-checkbox>
+          <!--label for="status">Status</label-->
+          <select class="form-control" id="status" [(ngModel)]="userQuery.status" name="status">
+            <option *ngFor="let status of statusList" [value]="status.id">{{status.label}}</option>
+          </select>
+        </div>
+
+
+        <div class="form-group" [formGroup]="userListForm" style="text-align: left; margin-left:15px; flex-grow:1">
+          <!-- label for="fname">First Name</label -->
+          <!-- input formControlName="fname" type="text" class="form-control" name="fname" [(ngModel)]="userQuery.fname" -->
+
+
+          <md-input-container>
+            <input mdInput style="width:100%" placeholder="First name" type="text" formControlName="fname" name="fname"
+              [(ngModel)]="userQuery.fname">
+          </md-input-container>
+
+          <!-- md-input style="width:100%" placeholder="First name" type="text" formControlName="fname" name="fname" [(ngModel)]="userQuery.fname"></md-input -->
+
+        </div>
+
+        <div class="form-group" [formGroup]="userListForm" style="text-align: left;margin-left:15px; flex-grow:1">
+          <!-- label for="name">Last Name</label -->
+
+          <md-input-container>
+            <input mdInput style="width:100%" placeholder="Last name" formControlName="lname" type="text" name="lname"
+              [(ngModel)]="userQuery.lname">
+          </md-input-container>
+
+          <!-- md-input  style="width:100%"  placeholder="Last name" formControlName="lname" type="text" name="lname" [(ngModel)]="userQuery.lname"></md-input -->
+        </div>
+
+      </div>
+      <div style="display:flex;flex-direction:row;justify-content:space-between">
+
+
+        <div class="form-group" style="text-align: left; flex-grow: 1">
+          <md-checkbox name="showDistrict" binary="true" [(ngModel)]="showDistrict">District</md-checkbox>
+          <select class="form-control" id="district" [(ngModel)]="userQuery.district" name="district"
+            (change)="filterCityList($event.target.value)">
+            <option *ngFor="let district of districtList" [value]="district">{{district}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left;  flex-grow: 1; margin-left:15px">
+          <md-checkbox name="showCity" binary="true" [(ngModel)]="showCity">City</md-checkbox>
+          <select class="form-control" id="city" [(ngModel)]="userQuery.city" name="city"
+            (change)="cityChange($event.target.value)">
+            <option *ngFor="let city of cityList" [value]="city.id">{{city.name}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left; flex-grow: 0; margin-left:15px">
+          <!-- p-checkbox name="showRadius" binary="true" [(ngModel)]="showRadius" [disabled] = "userQuery.city ==='-1'"></p-checkbox -->
+          <label for="radisu">Radius (Km)</label>
+          <select class="form-control" id="radius" [(ngModel)]="userQuery.radius" name="radius"
+            [disabled]="userQuery.city === '-1'">
+            <option *ngFor="let radius of radiusList" [value]="radius">{{radius}}</option>
+          </select>
+
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-left:15px">
+          <md-checkbox name="showTransportation" binary="true" [(ngModel)]="showTransportation">Transportation
+          </md-checkbox>
+          <select class="form-control" id="transportation" [(ngModel)]="userQuery.transportation" name="transportation">
+            <option *ngFor="let transportation of transportationList" [value]="transportation.id">
+              {{transportation.label}}</option>
+          </select>
+        </div>
+
+      </div>
+      <div style="display:flex;flex-direction:row;justify-content:space-between">
+        <div class="form-group" style="text-align: left;">
+          <md-checkbox name="showGender" binary="true" [(ngModel)]="showGender">Gender</md-checkbox>
+          <select class="form-control" id="gender" [(ngModel)]="userQuery.gender" name="gender">
+            <option *ngFor="let gender of genderList" [value]="gender.id">{{gender.label}}</option>
+          </select>
+        </div>
+
+
+        <div class="form-group" style="text-align: left; flex-grow: 1; margin-left:15px">
+          <md-checkbox name="showMaritalStatus" binary="true" [(ngModel)]="showMaritalStatus">Marital Status
+          </md-checkbox>
+          <select class="form-control" id="maritalStatus" [(ngModel)]="userQuery.maritalStatus" name="maritalStatus">
+            <option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus.id">{{maritalStatus.label}}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left; flex-grow: 1; margin-left:15px">
+          <md-checkbox name="showOccupation" binary="true" [(ngModel)]="showOccupation">Occupation</md-checkbox>
+          <select class="form-control" id="occupation" [(ngModel)]="userQuery.occupation" name="occupation">
+            <option *ngFor="let occupation of occupationList" [value]="occupation.id">{{occupation.label}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left; flex-grow: 1; margin-left:15px">
+          <md-checkbox name="showNbChildren" binary="true" [(ngModel)]="showNbChildren">Nb Children</md-checkbox>
+          <select class="form-control" id="nbChildren" [(ngModel)]="userQuery.nbChildren" name="nbChildren">
+            <option *ngFor="let nbChildren of nbChildrenList" [value]="nbChildren">{{nbChildren}}</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="text-align: left; flex-grow: 1; margin-left:15px; padding-top: 24px;">
+          <select class="form-control" id="nbChildrenLimit" [(ngModel)]="userQuery.nbChildrenLimit"
+            name="nbChildrenLimit">
+            <option *ngFor="let nbChildrenLimit of nbChildrenLimitList" [value]="nbChildrenLimit">{{nbChildrenLimit}}
+            </option>
+          </select>
+        </div>
+
+      </div>
+
+      <div style="display:flex;flex-direction:row;justify-content:flex-start;">
+
+        <div style="width:100px; text-align: left"><label>Date of Birth</label></div>
+
+        <div [formGroup]="userListForm" class="form-group" style="margin: 0px auto 0px auto;">
+          <div>
+            <label>From</label>
+          </div>
+          <div>
+            <ng2-datepicker [options]="bDateFromOptions" formControlName="fromDate" id="fromDate"
+              [(ngModel)]="bDateFromModel" expanded="true"></ng2-datepicker>
+          </div>
+          <!--p-calendar yearRange="-100:+00" showIcon="true" monthNavigator="true" yearNavigator="true" formControlName="fromDate" [(ngModel)]="userQuery.bDateFrom" maxDate="0d" dateFormat="dd/mm/yy" defaultDate="fromDate"></p-calendar -->
+        </div>
+
+
+        <div [formGroup]="userListForm" class="form-group" style="margin: 0px auto 0px auto;">
+          <div>
+            <label>To</label>
+          </div>
+          <div>
+            <ng2-datepicker [options]="bDateToOptions" formControlName="toDate" id="toDate" [(ngModel)]="bDateToModel"
+              expanded="true"></ng2-datepicker>
+          </div>
+          <!--label for="toDate">To</label>
+                <p-calendar yearRange="-100:+00" showIcon="true" monthNavigator="true" yearNavigator="true" formControlName="toDate" [(ngModel)]="userQuery.bDateTo" maxDate="0d" dateFormat="dd/mm/yy" defaultDate="toDate"></p-calendar-->
+        </div>
+
+      </div>
+
+      <div style="display:flex;flex-direction:row;justify-content:flex-start; align-items: center; margin:15px 0;">
+
+        <div style="width:100px; text-align: left"><label>Birthday</label></div>
+
+        <div [formGroup]="userListForm" class="form-group" style="margin: 0px auto 0px auto;">
+
+          <div>
+            <label>From</label>
+          </div>
+          <div>
+            <ng2-datepicker [options]="bDayFromOptions" formControlName="fromBirthday" id="fromBirthday"
+              [(ngModel)]="bDayFromModel" expanded="true"></ng2-datepicker>
+          </div>
+
+          <!--label for="fromBirthday">From</label>
+                <p-calendar yearRange="-00:+00" showIcon="true"  monthNavigator="true" yearNavigator="false" formControlName="fromBirthday" [(ngModel)]="userQuery.bDayFrom" dateFormat="dd/mm/yy" defaultDate="fromBirthday"></p-calendar-->
+        </div>
+
+
+        <div [formGroup]="userListForm" class="form-group" style="margin: 0px auto 0px auto;">
+          <!-- p-calendar yearRange="-00:+00" showIcon="true"  monthNavigator="true" yearNavigator="false" formControlName="toBirthday" [(ngModel)]="userQuery.bDayTo" dateFormat="dd/mm/yy" defaultDate="toBirthday"></p-calendar -->
+          <div>
+            <label>To</label>
+          </div>
+          <div>
+            <ng2-datepicker [options]="bDayToOptions" formControlName="toBirthday" id="toBirthday"
+              [(ngModel)]="bDayToModel" expanded="true"></ng2-datepicker>
+          </div>
+
+
+        </div>
+
+      </div>
+
+      <div [formGroup]="userListForm" class="form-group">
+        <label for="userListFormExclude" class="control-label text-left" style="width: 100%">Exclude</label>
+        <textarea name="exclude" id="userListFormExclude" rows="5" class="form-control"
+          formControlName="exclude"></textarea>
+      </div>
+
+    </md-card>
+
+    <md-card>
+
+      <div style="display:flex;flex-direction:row;justify-content:space-around;">
+        <div>
+          <button md-raised-button color="primary" (click)="onCancel()">Reset</button>
+          <button md-raised-button color="primary" (click)="onSubmit()">Search</button>
+          <button md-raised-button color="primary" (click)="onExport()">Export</button>
+          <button md-raised-button color="primary" [disabled]="exportAllSpinner"
+            *ngIf="exportAllSpinner">Downloading...</button>
+          <button md-raised-button color="primary" *ngIf="!exportAllSpinner" (click)="onExportAll()">Export
+            All</button>
+        </div>
+      </div>
+    </md-card>
+  </div>
+</form>
+
+<md-card>
+
+  <div style="margin-top:10px">
+
+    <label>Nb Hits:&nbsp;{{nbMatchingUsers}}</label>
+    <!-- button md-raised-button color="primary" style="float:right" type="button" (click)="dt.exportCSV()"> <i class="fa fa-download" aria-hidden="true" style="margin:0px 5px 0px 0px"></i></button -->
+
+    <p-dataTable #dt [value]="users" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3"
+      [rowsPerPageOptions]="[20,40,80]" selectionMode="single" [(selection)]="selectedUser"
+      (onRowSelect)="onRowSelect($event)" [globalFilter]="gb" resizableColumns="">
+
+      <p-column [hidden]="true" field="id" header="ID"></p-column>
+
+      <p-column field="lastLoginDate" header="Last Login" [sortable]="true">
+
+        <template let-user="rowData" pTemplate type="body">
+          <span>{{user.lastLoginDate | date:'dd/MM/yyyy' }} </span>
+        </template>
+
+      </p-column>
+
+
+      <p-column field="dateOfBirth" header="BirthD" [sortable]="true">
+
+        <template let-user="rowData" pTemplate type="body">
+          <span>{{user.dateOfBirth | date:'dd/MM/yyyy' }} </span>
+        </template>
+
+      </p-column>
+
+      <p-column field="fName" header="Name" [sortable]="true">
+        <template let-user="rowData" pTemplate type="body">
+          <span>{{user.fName}} {{user.lName}}</span>
+        </template>
+
+      </p-column>
+
+      <p-column field="mobile" header="Mobile" [sortable]="true">
+        <template let-user="rowData" pTemplate type="body">
+          <span>{{user.mobile}}</span>
+        </template>
+      </p-column>
+
+      <p-column [hidden]="!showDistrict" field="city.district" header="District" [sortable]="true"></p-column>
+      <p-column [hidden]="!showCity" field="city.name" header="City" [sortable]="true"></p-column>
+      <p-column [hidden]="!showTransportation" field="transportation.label" header="Transport" [sortable]="true">
+      </p-column>
+      <p-column [hidden]="!showGender" field="gender.label" header="Gender" [sortable]="true"></p-column>
+      <p-column [hidden]="!showMaritalStatus" field="maritalStatus.label" header="Marital&nbsp;S." [sortable]="true">
+      </p-column>
+      <p-column [hidden]="!showNbChildren" field="nbChildren" header="Children" [sortable]="true"></p-column>
+      <p-column [hidden]="!showOccupation" field="occupation.label" header="Occupation" [sortable]="true"></p-column>
+      <p-column [hidden]="!showStatus" field="status.label" header="Status" [sortable]="true"></p-column>
+
+    </p-dataTable>
+
+
+  </div>
+
+</md-card>
+
+<div>
+  <app-user-detail [user]="selectedUser"></app-user-detail>
+</div>

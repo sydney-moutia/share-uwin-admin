@@ -1,0 +1,73 @@
+<p-growl [value]="msgs"></p-growl>
+
+<!--
+<md-card class="centered">
+    <h3> Coupon's listing
+ <span (click)="onNewItem()" style="cursor:pointer">
+            <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+        </span>
+</h3>
+</md-card>
+-->
+
+<div *ngIf="shopName" style="display:flex;justify-content:center;flex-direction:row">
+      <h1>{{shopName}}</h1> 
+</div>
+
+<md-card>
+    <div style="display:flex;flex-direction:row;">
+        <div>
+            <button md-raised-button color="primary" (click)="onGoBack()" >Back</button>
+        </div>
+
+        <div style="flex-grow:1; justify-content:center">
+            <h3 style="text-align:center"> Coupon's listing
+                  
+                <span *ngIf="items.length > 0" (click)="onNewItem()" style="cursor:pointer">
+                    <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+                </span>
+            </h3>
+        </div>
+    </div>
+
+</md-card>
+
+
+
+    <div style="display:flex;flex-direction:column;">
+
+        <div >
+
+            <p-dataTable [value]="coupons" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,40,80]"
+                selectionMode="single" [(selection)]="selectedCoupon" (onRowSelect)="onRowSelect($event)" [globalFilter]="gb" resizableColumns="">
+                <p-column field="nameItem" header="Item" [sortable]="true"></p-column> -->
+                <p-column field="name" header="Coupon" [sortable]="true"></p-column>
+
+
+    <p-column field="validityDate" header="Validity" [sortable]="true">
+
+        <template let-coupon="rowData" pTemplate type="body">
+           <span [ngClass]="{'boldIt':(coupon.validityDate >= today)}" >{{coupon.validityDate | date:'dd/MM/yyyy' }} </span>
+
+        </template>
+
+    </p-column>
+
+
+            </p-dataTable>
+        </div>
+
+
+        <div *ngIf="selectedCoupon && items.length >0 ">
+            <app-coupon-detail (deleted)="deletedCoupon($event)" [refreshMe] = "refreshMe" [idShop] = "idShop" [coupon]="selectedCoupon" [couponList] = "coupons"  ></app-coupon-detail> 
+        </div>
+
+        <div *ngIf="items.length === 0">
+        <md-card>
+            No item available. Create an item in the catalog first.
+        </md-card>
+</div>
+
+
+
+    </div>

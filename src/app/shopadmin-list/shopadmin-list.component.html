@@ -1,0 +1,63 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+    <div style="display:flex;flex-direction:row;">
+        <div>
+            <button md-raised-button color="primary" (click)="onGoBack()" >Back</button>
+    </div>
+    <div style="text-align: center;flex-grow:1;">
+    <h3 style="text-align:center"> Shop's administrator listing 
+         <span (click)="onNewShopAdmin()" style="cursor:pointer">
+            <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+        </span>
+    </h3>
+    </div>
+    </div>
+</md-card>
+
+<!--
+<md-card class="centered">
+    <h3> Shop's administrator listing
+         <span (click)="onNewShopAdmin()" style="cursor:pointer">
+            <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+        </span>
+    </h3>
+</md-card>
+-->
+
+<md-card style="overflow: scroll;height: 400px;">
+
+
+
+    <input #gb [(ngModel)]="searchText" type="text" pInputText  style="float:left; width: 100%" placeholder="Search">
+    <label style="margin-top:10px">Nb Hits:&nbsp;{{nbResult}}</label>
+    <button md-raised-button color="primary" style="float:right" type="button" (click)="dt.exportCSV()"> <i class="fa fa-download" aria-hidden="true" style="margin:0px 5px 0px 0px"></i></button>
+
+    <div>
+        <p-dataTable #dt [value]="shopAdmins" 
+            selectionMode="single" [(selection)]="selectedShopAdmin" (onRowSelect)="onRowSelect($event)" 
+            [rows]="limit" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[15,20,30]"
+            [globalFilter]="gb" resizableColumns=""
+            [lazy]="true"  (onLazyLoad)="loadLazy($event)" [totalRecords]="nbResult">
+
+   
+
+
+             <p-column header="Name" [sortable]="true" [style]="{'width':'30%'}">
+                <template let-shopAdmin="rowData" pTemplate type="body">
+                    <span>{{shopAdmin.fName}} {{shopAdmin.lName}}</span>
+                </template>
+            </p-column>
+
+            <p-column field="lName" header="lName" [sortable]="false" [hidden]="true"></p-column>
+            <p-column field="fName" header="fName" [sortable]="false" [hidden]="true"></p-column>
+            <p-column field="email" header="email" [sortable]="true" [style]="{'width':'50%'}"></p-column>
+            <p-column field="role.label" header="Role" [sortable]="true" [style]="{'width':'20%'}"></p-column>
+        </p-dataTable>
+    </div>
+    <!-- div *ngIf="mode==='ADMIN'" -->
+    <div>
+        <app-shopadmin-detail [inDialog]="inDialog" [shopAdmin]="selectedShopAdmin" (deleted)="onDeletedShopAdmin($event)" (saved)="onSavedShopAdmin($event)"></app-shopadmin-detail>
+    </div>
+
+</md-card>

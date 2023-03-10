@@ -1,0 +1,179 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="item">
+
+    <md-card>
+        <h3> {{item.name}}</h3>
+
+        <form>
+            <div class="row">
+                <div class="col-md">
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="item_category_1">Category 1</label>
+                        <select [(ngModel)]="prodExt.category1.stringValue" formControlName="category1"
+                            class="form-control" id="prod_ext_category1" name="prod_ext_category1"
+                            (change)="prodExt.subcategory1.stringValue = ''">
+                            <option value="">-- None --</option>
+                            <option *ngFor="let cat of cats" [ngValue]="cat.name.stringValue">{{ cat.name.stringValue }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="item_subcategory_1">Sub Category 1</label>
+                        <select class="form-control" [(ngModel)]="prodExt.subcategory1.stringValue"
+                            formControlName="subcategory1" id="item_subcategory_1" name="prod_ext_subcategory1">
+                            <option value="">-- None --</option>
+                            <option *ngFor="let scat of childrenToList(cats, prodExt.category1.stringValue)"
+                                [ngValue]="scat">{{ scat }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="item_category_2">Category 2</label>
+                        <select [(ngModel)]="prodExt.category2.stringValue" class="form-control" id="item_category_2"
+                            formControlName="category2" name="prod_ext_category2"
+                            (change)="prodExt.subcategory2.stringValue = ''">
+                            <option value="">-- None --</option>
+                            <option *ngFor="let cat of cats" [ngValue]="cat.name.stringValue">{{ cat.name.stringValue }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="item_subcategory_2">Sub Category 2</label>
+                        <select class="form-control" [(ngModel)]="prodExt.subcategory2.stringValue"
+                            formControlName="subcategory2" id="prod_ext_subcategory2" name="prod_ext_subcategory2">
+                            <option value="">-- None --</option>
+                            <option *ngFor="let scat of childrenToList(cats, prodExt.category2.stringValue)"
+                                [ngValue]="scat">{{ scat }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:row;">
+
+                <div style="display:flex;flex-direction:column;">
+
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="itemName">Name</label>
+                        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <input formControlName="itemName" type="text" class="form-control" name="name"
+                            [(ngModel)]="item.name" required placeholder="Required">
+                        <!--
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userformItem.controls['itemName'].valid&&userformItem.controls['itemName'].dirty">
+                            <i class="fa fa-exclamation-triangle"></i> Name is required
+                        </div>
+-->
+                        <control-messages [control]="userformItem.controls.itemName"></control-messages>
+                    </div>
+
+
+
+                    <div class="form-group" [formGroup]="userformItem">
+                        <label for="itemPrice">Price</label>
+                        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+                        <!--
+                        <p-inputMask formControlName="itemPrice" name="itemPrice" alias="decimal" [(ngModel)]="item.price" placeholder="Required"
+                placeholder=""></p-inputMask>
+                -->
+                        <!-- pattern="/^0|[1-9]\d*$/" -->
+                        <!--
+                xxx : {{item.price}}
+                <button md-raised-button color="warn" (click)="item.price = item.price + 1" >+</button> -->
+
+                        <input formControlName="itemPrice" type="number" class="form-control" name="itemPrice"
+                            [(ngModel)]="item.price" required placeholder="Required">
+                        <!--p-inputMask formControlName="itemPrice" name="itemPrice" alias="decimal" [(ngModel)]="item.price" required placeholder="Required"></p-inputMask-->
+                        <control-messages [control]="userformItem.controls.itemPrice"></control-messages>
+                        <!--
+
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userformItem.controls['itemPrice'].valid&&userformItem.controls['itemPrice'].dirty">
+                            <i class="fa fa-exclamation-triangle"></i> Number required
+                        </div>
+                    -->
+                    </div>
+
+                    <div class="form-group" [formGroup]="productExtForm">
+                        <label for="itemNormalPrice">Normal Price <small>when on promo</small></label>
+                        <input type="number" id="itemNormalPrice" class="form-control" name="itemNormalPrice"
+                            formControlName="normalPrice">
+                    </div>
+
+                    <div class="form-group" [formGroup]="productExtForm">
+                        <label for="quantityAvailable">Quantity Available</label>
+                        <input type="number" id="quantityAvailable" class="form-control" name="quantityAvailable"
+                            formControlName="quantityAvailable">
+                    </div>
+                </div>
+
+                <div style="display:flex; flex-grow : 1">
+
+                    <div class="form-group" [formGroup]="userformItem" style="width: 100%; margin-left: 10px;">
+                        <label for="itemDescription">Description</label>
+                        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <textarea pInputTextarea type="text" formControlName="itemDescription" class="form-control"
+                            name="itemDescription" [(ngModel)]="item.description" required></textarea>
+                        <control-messages [control]="userformItem.controls.itemDescription"></control-messages>
+                        <!--
+                        <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userformItem.controls['itemDescription'].valid&&userformItem.controls['itemDescription'].dirty">
+                            <i class="fa fa-exclamation-triangle"></i> Description is required
+                        </div>
+-->
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <div *ngIf="!item.id">Save data first. before uploading pictures</div>
+
+            <div *ngIf="item.id">
+
+                <div style="display:flex;flex-direction:row;margin-left:auto">
+
+                    <div></div>
+
+                    <div>
+                        <input type="file" (change)="fileChangeEvent($event)" name="fileUploadItem" id="fileUploadItem"
+                            placeholder="Upload file..." />
+                    </div>
+
+                    <div style="margin-left: auto;">
+
+                        <button md-raised-button (click)="upload()" [disabled]="!canUpload()">Upload</button>
+                    </div>
+
+                </div>
+
+                <div style="text-align: center" *ngIf="item.photoPath">
+                    <div>
+                        <img src="{{getPhotoFolder(item.photoPath)}}" />
+                        <a style="cursor:pointer" (click)="removePhoto(item.photoPath)"><i class="fa fa-trash"
+                                aria-hidden="true" style="vertical-align:bottom"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </md-card>
+
+    <md-card>
+        <div style="display:flex;flex-direction:row;justify-content:space-around;">
+            <div>
+                <button md-raised-button color="warn" (click)="onDelete()" [disabled]="!item.id" *ngIf="isAdmin">Broken
+                    Delete</button>
+                <button md-raised-button color="warn" (click)="onArchive()" [disabled]="!item.id">Archive</button>
+                <button md-raised-button color="primary" (click)="onCancel();"
+                    [disabled]="!item.id || (!userformItem.dirty && !productExtForm.dirty)">Cancel</button>
+                <button md-raised-button color="primary" (click)="onSubmit()"
+                    [disabled]="(!userformItem.valid || !userformItem.dirty) && (!productExtForm.valid || !productExtForm.dirty)">Save</button>
+            </div>
+        </div>
+    </md-card>
+</div>

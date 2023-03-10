@@ -1,0 +1,64 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+  <h3>New Shop Category</h3>
+</md-card>
+
+<form (ngSubmit)="submit()">
+  <md-card [formGroup]="form">
+    <div class="form-group">
+      <label for="name">Parent</label>
+      <ng-container *ngIf="parents$ | async">
+        <select formControlName="parent" class="form-control" name="parent">
+          <option value=""></option>
+          <ng-container *ngFor="let parent of parents">
+            <option [value]="parent.id">{{ parent.title }}</option>
+          </ng-container>
+        </select>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Title</label>
+      <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+      <input
+        formControlName="title"
+        type="text"
+        class="form-control"
+        name="title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="name">Subtitle</label>
+      <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+      <input
+        formControlName="subtitle"
+        type="text"
+        class="form-control"
+        name="title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="name">Position</label>
+      <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+      <input
+        formControlName="position"
+        type="number"
+        class="form-control"
+        name="title"
+      />
+    </div>
+  </md-card>
+
+  <md-card>
+    <div
+      style="display: flex; flex-direction: row; justify-content: space-around"
+    >
+      <div>
+        <button md-raised-button color="primary" type="submit">Create</button>
+      </div>
+    </div>
+  </md-card>
+</form>

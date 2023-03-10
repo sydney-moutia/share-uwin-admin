@@ -1,0 +1,56 @@
+<p-growl [value]="msgs"></p-growl>
+
+<ng-container *ngIf="groupVouchers$ | async">
+  <p-dataTable [value]="groupVouchers" sortMode="multiple" [rows]="5" [paginator]="true" [pageLinks]="3"
+    [rowsPerPageOptions]="[20, 40, 80]" selectionMode="single" [(selection)]="selectedGroupVouchers"
+    (onRowSelect)="onSelectGroupVouchers($event)" [globalFilter]="gb" resizableColumns="">
+    <p-column field="shopName" header="Shop" [sortable]="true"></p-column>
+    <p-column field="name" header="Name" [sortable]="true"></p-column>
+    <p-column field="voucherValue" header="Amount" [sortable]="true"></p-column>
+    <p-column field="validityDate" header="Expiry Date" [sortable]="true">
+      <template let-voucher="rowData" pTemplate type="body">
+        <span>{{ voucher.validityDate | date }}</span>
+      </template>
+    </p-column>
+  </p-dataTable>
+</ng-container>
+
+<ng-container *ngIf="list$ | async">
+  <div class="p-3 text-center">
+    <span class="btn btn-warning">Total: Rs {{ total }}</span>
+    <button class="btn btn-default mx-3" type="button" [disabled]="!selectedAllVouchers"
+      (click)="moveToGroup(selectedAllVouchers)">
+      <span class="fa fa-chevron-up"></span>
+    </button>
+
+    <button class="btn btn-default mx-3" type="button" [disabled]="!selectedGroupVouchers"
+      (click)="moveToAll(selectedGroupVouchers)">
+      <span class="fa fa-chevron-down"></span>
+    </button>
+
+    <button class="btn btn-danger mx-3" type="button" [disabled]="isSaveBtnDisabled" (click)="save($event)">
+      Save
+    </button>
+  </div>
+
+  <div class="form-group" style="width: 33.33%">
+    <label for="showExpiredVouchers" class="control-label">Show Expired Voucher</label>
+    <select id="showExpiredVouchers" [formControl]="showExpiredVouchers" class="form-control">
+      <option [value]="false">False</option>
+      <option [value]="true">True</option>
+    </select>
+  </div>
+
+  <p-dataTable [value]="list" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3"
+    [rowsPerPageOptions]="[20, 40, 80]" selectionMode="single" [(selection)]="selectedAllVouchers"
+    (onRowSelect)="onSelectAllVouchers($event)" [globalFilter]="gb" resizableColumns="">
+    <p-column field="shopName" header="Shop" [sortable]="true"></p-column>
+    <p-column field="name" header="Name" [sortable]="true"></p-column>
+    <p-column field="voucherValue" header="Amount" [sortable]="true"></p-column>
+    <p-column field="validityDate" header="Expiry Date" [sortable]="true">
+      <template let-voucher="rowData" pTemplate type="body">
+        <span>{{ voucher.validityDate | date }}</span>
+      </template>
+    </p-column>
+  </p-dataTable>
+</ng-container>

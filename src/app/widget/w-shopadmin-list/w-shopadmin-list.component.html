@@ -1,0 +1,38 @@
+
+<label *ngIf="label">{{label}}&nbsp;
+     <span [hidden]="userRole!=='ADMIN' && userRole!=='DIRECTOR'" (click)="showDialog()" style="cursor:pointer">
+        <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+     </span>
+</label>
+
+<div *ngIf="shopAdminList && shopAdminList.length>0">
+    
+    <p-dataTable [style]="{'font-size': '0.8em'}" [value]="shopAdminList"  [paginator]="true" [responsive]="true"
+    [rows]="5" [paginator]="true" [pageLinks]="3"  >
+            
+    <p-column field="fName" header="Name" [sortable]="false" [style]="{'width':'25%'}">
+        <template let-shopAdmin="rowData" pTemplate type="body">
+            <span>{{shopAdmin.fName}} {{shopAdmin.lName}}</span>
+        </template>
+    </p-column>
+
+    <p-column field="email" header="email" [sortable]="false" [style]="{'width':'50%'}"></p-column>
+
+    <p-column field="role.label" header="Role" [sortable]="false" [style]="{'width':'20%'}"></p-column>
+
+
+    <p-column [hidden]="userRole!=='ADMIN' && userRole!=='DIRECTOR'" [sortable]="false" [style]="{'width':'5%', 'text-align':'center'}">
+        <template let-shopAdmin="rowData" pTemplate type="body">
+            <span *ngIf="userId !== shopAdmin.id" (click)="onRemoveShopAdmin(shopAdmin)" style="cursor:pointer">
+            <i class="fa fa-minus-circle" aria-hidden="true" style="float:right;" ></i>
+            </span>
+        </template>
+    </p-column>        
+
+    </p-dataTable>
+</div>
+
+
+<p-dialog draggable="false" minWidth="700" width="700" header="Shop Administrators" [(visible)]="display">
+    <app-shopadmin-list [inDialog]="true" (selected)="onSelectedShopAdmin($event)" [mode]="search" ></app-shopadmin-list>
+</p-dialog>

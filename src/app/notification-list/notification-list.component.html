@@ -1,0 +1,26 @@
+<md-card>
+  <div style="display:flex;flex-direction:row;">
+    <div>
+      <button md-raised-button color="primary" (click)="onGoBack()">Back</button>
+    </div>
+
+    <div style="flex-grow:1; justify-content:center">
+      <h3 style="text-align:center"> Notification </h3>
+    </div>
+  </div>
+</md-card>
+
+<app-notification-detail (created)="onCreated($event)"></app-notification-detail>
+
+<div *ngIf="notifications$ | async" style="margin-top: 16px;">
+  <p-dataTable [value]="notifications" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3"
+    [rowsPerPageOptions]="[20,40,80]" selectionMode="single">
+    <p-column field="createdAt" header="Date" [sortable]="true">
+      <template let-notification="rowData" pTemplate type="body">
+        <span>{{ notification.createdAt | date }}</span>
+      </template>
+    </p-column>
+    <p-column field="title" header="Title" [sortable]="true"></p-column>
+    <p-column field="message" header="Message" [sortable]="false"></p-column>
+  </p-dataTable>
+</div>

@@ -1,0 +1,55 @@
+<p-growl [value]="msgs"></p-growl>
+
+<!--
+<md-card class="centered">
+    <h3> Flash Sell's listing
+
+
+ <span (click)="onNewItem()" style="cursor:pointer">
+            <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+        </span>
+</h3>
+</md-card>
+-->
+
+<div *ngIf="shopName" style="display:flex;justify-content:center;flex-direction:row">
+      <h1>{{shopName}}</h1> 
+</div>
+
+<md-card>
+    <div style="display:flex;flex-direction:row;">
+        <div>
+            <button md-raised-button color="primary" (click)="onGoBack()" >Back</button>
+        </div>
+
+        <div style="flex-grow:1; justify-content:center">
+            <h3 style="text-align:center"> Flash Sale's listing
+                <span (click)="onNewItem()" style="cursor:pointer">
+                    <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+                </span>
+            </h3>
+        </div>
+    </div>
+
+</md-card>
+
+
+    <div style="display:flex;flex-direction:column;">
+
+        <div >
+
+            <p-dataTable [value]="flashsells" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,40,80]"
+                selectionMode="single" [(selection)]="selectedFlashsell" (onRowSelect)="onRowSelect($event)" [globalFilter]="gb" resizableColumns="">
+                <p-column field="nameItem" header="Item" [sortable]="true"></p-column> -->
+                <p-column field="name" header="Name" [sortable]="true"></p-column>
+                <p-column field="remainingNbSales" header="remainingNbSales" [sortable]="true"></p-column>
+            </p-dataTable>
+        </div>
+
+
+        <div >
+
+            <app-flashsell-detail [refreshMe] = "refreshMe" [idShop] = "idShop" [flashsell]="selectedFlashsell" [flashsellList] = "flashsells"  ></app-flashsell-detail> 
+
+        </div>
+    </div>

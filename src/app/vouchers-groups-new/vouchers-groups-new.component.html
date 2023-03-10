@@ -1,0 +1,46 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card class="mb-4">
+  <div style="display: flex; flex-direction: row">
+    <div>
+      <button md-raised-button color="primary" (click)="onGoBack()">
+        Back
+      </button>
+    </div>
+    <div style="text-align: center; flex-grow: 1">
+      <h3 style="text-align: center">New Vouchers Group</h3>
+    </div>
+  </div>
+</md-card>
+
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <md-card [formGroup]="form">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control"
+        name="name"
+      />
+    </div>
+  </md-card>
+
+  <md-card>
+    <div
+      style="display: flex; flex-direction: row; justify-content: space-around"
+    >
+      <div>
+        <button
+          md-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="disabledBtn"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </md-card>
+</form>

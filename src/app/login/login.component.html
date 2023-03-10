@@ -1,0 +1,43 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card style="width:350px; margin:20vh auto 0px auto;">
+
+  <md-card-title-group>
+    <md-card-title>Login</md-card-title>
+    <md-card-subtitle>uWin Administrator System</md-card-subtitle>
+  </md-card-title-group>
+  <md-card-content>
+
+    <form id="userformLogin">
+
+      <div style="display:flex;flex-direction:column">
+
+        <div [formGroup]="userformLogin" class="form-group" style="margin-top: 15px">
+
+          <md-input-container>
+            <input mdInput formControlName="email" [(ngModel)]="email" type="text" placeholder="email">
+          </md-input-container>
+
+          <!-- md-input formControlName="email" [(ngModel)]="email" type="text" placeholder="email"></md-input -->
+          <control-messages [control]="userformLogin.controls.email"></control-messages>
+        </div>
+      </div>
+
+      <div [formGroup]="userformLogin" class="form-group" style="">
+
+        <md-input-container>
+          <input mdInput formControlName="pwd" [(ngModel)]="pwd" type="password" placeholder="password">
+        </md-input-container>
+
+        <!-- md-input formControlName="pwd" [(ngModel)]="pwd" type="password" placeholder="password"></md-input -->
+        <control-messages [control]="userformLogin.controls.pwd"></control-messages>
+      </div>
+    </form>
+  </md-card-content>
+
+  <md-card-actions align="center">
+    <button md-raised-button color="primary" (click)="onSubmit()" [disabled]="!userformLogin.valid"
+      *ngIf="!showSpinner">Connect</button>
+    <button md-raised-button color="primary" [disabled]="true" *ngIf="showSpinner">Authenticating...</button>
+  </md-card-actions>
+</md-card>

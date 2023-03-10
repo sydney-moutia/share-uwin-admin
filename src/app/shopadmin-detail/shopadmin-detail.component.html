@@ -1,0 +1,81 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="shopAdmin">
+
+    <md-card>
+        <h3> {{shopAdmin.fName}} {{shopAdmin.lName}}</h3>
+        <form>
+            <div style="display:flex;flex-direction:column;">
+
+                <div style="display:flex;flex-direction:row;justify-content:space-between">
+
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="role">Role</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <select formControlName="role" class="form-control" id="public" required [(ngModel)]="shopAdmin.role" name="public">
+                        <option  *ngFor="let role of roles" [ngValue]="role" >{{role.label}}</option>
+                        </select> <!--[attr.selected]="(role.id == shopAdmin.role.id) ? true : null"-->
+                        <control-messages [control]="userformShopAdmin.controls.role"></control-messages>
+                    </div> 
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="fName">First Name</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <input formControlName="fName" type="text" class="form-control" name="fName" [(ngModel)]="shopAdmin.fName" required placeholder="Required">
+                        <control-messages [control]="userformShopAdmin.controls.fName"></control-messages>
+                    </div>
+ 
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="lName">Last Name</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <input formControlName="lName" type="text" class="form-control" name="lName" [(ngModel)]="shopAdmin.lName" required placeholder="Required">
+                        <control-messages [control]="userformShopAdmin.controls.lName"></control-messages>
+                    </div>
+
+                   
+                </div>
+
+                <div style="display:flex; flex-direction:row;justify-content:space-between">
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="email">email</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <input formControlName="email" type="text" class="form-control" name="email" [(ngModel)]="shopAdmin.email" required placeholder="Required">
+                        <control-messages [control]="userformShopAdmin.controls.email"></control-messages>
+                    </div>
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="pwd">Password</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+                        <input formControlName="pwd" type="text" class="form-control" name="pwd" [(ngModel)]="shopAdmin.pwd" required placeholder="Required">
+                        <control-messages [control]="userformShopAdmin.controls.pwd"></control-messages>
+                    </div>                    
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="tel">Phone</label>
+                        <input formControlName="tel" type="text" class="form-control" name="tel" [(ngModel)]="shopAdmin.tel">
+                        <control-messages [control]="userformShopAdmin.controls.tel"></control-messages>
+                    </div>
+
+                    <div class="form-group" [formGroup]="userformShopAdmin">
+                        <label for="mobile">Mobile</label>
+                        <input formControlName="mobile" type="text" class="form-control" name="mobile" [(ngModel)]="shopAdmin.mobile">
+                        <control-messages [control]="userformShopAdmin.controls.mobile"></control-messages>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </md-card>
+
+  <md-card>
+
+  <div style="display:flex;flex-direction:row;justify-content:space-around;">
+
+
+    <div>
+      <button md-raised-button color="warn" (click)="onDelete()" [disabled]="!shopAdmin.id || idCurrentShopAdmin === shopAdmin.id">Delete</button>
+      <button md-raised-button color="primary" (click)="onCancel();" [disabled]="!shopAdmin.id || !userformShopAdmin.dirty">Cancel</button>
+      <button md-raised-button color="primary" (click)="onSubmit()" [disabled]="!userformShopAdmin.valid || !userformShopAdmin.dirty">Save</button>
+    </div>
+  </div>
+</md-card>    
+
+</div>

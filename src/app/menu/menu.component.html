@@ -1,0 +1,39 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div style="display: flex; justify-content: center; margin-top: 10px">
+  <div style="display: flex; justify-content: center; flex-direction: column">
+    <div
+      *ngIf="idShop"
+      style="display: flex; justify-content: center; flex-direction: row"
+    >
+      <h1>{{ shop.name }}</h1>
+      <span>[{{ shop.state }}]</span>
+    </div>
+
+    <div
+      style="display: flex; margin: 0px auto 0px auto; flex-direction: column"
+    >
+      <md-card *ngFor="let menuItem of menuItems" class="menuItem" id="a">
+        <a [routerLink]="[menuItem.url]">
+          <md-card-title-group>
+            <!-- i id="b" [ngClass]="[menuItem.className,'hvr-grow']" aria-hidden="true" style="font-size:2em"></i -->
+            <img [src]="'../../assets/' + menuItem.imageName" />
+            <md-card-title>{{ menuItem.title }}</md-card-title>
+            <md-card-subtitle>{{ menuItem.subtitle }}</md-card-subtitle>
+          </md-card-title-group>
+        </a>
+      </md-card>
+
+      <md-card class="menuItem" *ngIf="role === 'ADMIN' && !idShop">
+        <a href="https://uwin-201010.web.app/" target="_blank">
+          <md-card-title-group>
+            <img [src]="'../../assets/i-catalog.png'" />
+            <md-card-title>Admin v2</md-card-title>
+            <md-card-subtitle>Manager uWin</md-card-subtitle>
+          </md-card-title-group>
+        </a>
+      </md-card>
+    </div>
+  </div>
+</div>
+

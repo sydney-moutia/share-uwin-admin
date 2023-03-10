@@ -1,0 +1,98 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+  <h3>Edit My Win Menu Item</h3>
+</md-card>
+
+<ng-container *ngIf="myWinMenuItem$ | async">
+  <form (ngSubmit)="submit()">
+    <md-card [formGroup]="form">
+      <div class="form-group">
+        <label for="name">Title</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input
+          formControlName="title"
+          type="text"
+          class="form-control"
+          name="title"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="name">Unit</label>
+        <input
+          formControlName="unit"
+          type="text"
+          class="form-control"
+          name="unit"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="name">Position</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input
+          formControlName="position"
+          type="number"
+          class="form-control"
+          name="title"
+        />
+      </div>
+    </md-card>
+
+    <md-card>
+      <h3>Media</h3>
+      <div style="display: flex; flex-direction: row; margin-left: auto">
+        <div>
+          <input
+            type="file"
+            (change)="fileChangeEvent($event)"
+            name="fileUpload"
+            id="fileUpload"
+            placeholder="Upload file..."
+          />
+        </div>
+        <div style="margin-left: auto">
+          <button
+            type="button"
+            md-raised-button
+            (click)="upload($event)"
+            [disabled]="!canUpload()"
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="myWinMenuItem">
+        <div>
+          <div style="padding: 16px; text-align: center">
+            <div style="text-align: center" *ngIf="myWinMenuItem.imageUrl">
+              <img style="max-width: 100%" [src]="myWinMenuItem.imageUrl" />
+            </div>
+          </div>
+          <!-- <div>
+          <div>
+            <a style="cursor:pointer" (click)="removePhoto(path)"><i class="fa fa-trash" aria-hidden="true"
+                style="float:right; margin:3px 0px 0px 5px"></i></a>
+          </div>
+        </div> -->
+        </div>
+      </div>
+    </md-card>
+
+    <md-card>
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+        "
+      >
+        <div>
+          <button md-raised-button color="primary" type="submit">Update</button>
+        </div>
+      </div>
+    </md-card>
+  </form>
+</ng-container>

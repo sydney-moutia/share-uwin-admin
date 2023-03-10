@@ -1,0 +1,644 @@
+<p-growl [value]="msgs"></p-growl>
+
+<!--
+<div *ngIf="shop">
+  <div class="centered">
+    <h2>{{shop.name}}</h2>
+  </div>
+  -->
+
+
+
+<div *ngIf="shop">
+
+  <md-card>
+    <div style="display:flex;flex-direction:row;">
+      <div>
+        <button md-raised-button color="primary" (click)="onGoBack()">Back</button>
+      </div>
+
+      <div style="flex-grow:1; justify-content:center">
+        <h3 style="text-align:center"> {{shop.name}} </h3>
+      </div>
+    </div>
+
+  </md-card>
+
+
+  <!--
+  <p-tabView [style]="{'background-color':'beige'}" (onChange)="handleTabChange($event)">
+    <p-tabPanel header="General Info">
+
+
+-->
+  <form>
+    <md-card class="app-input-section" style="margin-top:10px">
+
+      <div style="display:flex;flex-direction:row;">
+
+        <!--div class="form-group">
+            <label for="name">Manager</label>
+            <input [disabled]="true" type="text" class="form-control" name="name" value="{{shopOwnerFullname}}" required placeholder="Required">
+
+            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty">
+              <i class="fa fa-exclamation-triangle"></i> Name is required
+            </div>
+          </div-->
+
+
+
+        <div style="display:flex;flex-direction:column;flex-grow:10; margin-right:15px">
+
+          <div class="form-group" [formGroup]="userform">
+            <label [ngClass]="{blue: (shop.state == 'PENDING'),red: (shop.state == 'INACTIVE')}"
+              for="status">Status</label>
+            <select formControlName="status" class="form-control" id="status" required [(ngModel)]="shop.state"
+              name="status">
+              <option *ngFor="let s of status" [value]="s">{{s}}</option>
+            </select>
+          </div>
+
+          <div class="form-group" [formGroup]="userform">
+            <label for="audience">Public</label>
+            <select formControlName="audience" class="form-control" id="public" required [(ngModel)]="shop.audience"
+              name="public">
+              <option *ngFor="let audience of audiences" [value]="audience">{{audience}}</option>
+            </select>
+          </div>
+
+          <div class="form-group" [formGroup]="userform">
+            <label for="shopType">Shop Type</label>
+            <select formControlName="shopType" class="form-control" id="shopType" required [(ngModel)]="shop.shopType"
+              name="shopType">
+              <option *ngFor="let shopType of shopTypes" [ngValue]="shopType">{{shopType.name}}</option>
+            </select>
+          </div>
+
+          <ng-container *ngIf="mainCategories.length > 0">
+            <div class="form-group" [formGroup]="shopExtForm">
+              <label>Categories</label>
+              <div formGroupName="mainCategories">
+                <ul>
+                  <li *ngFor="let mc of mainCategories">
+                    <label>
+                      <input type="checkbox" [formControlName]="mc.id" [value]="mc.id" /> {{ mc.title }}
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+
+
+        <div style="width:540px">
+          <!--label>Managers</label-->
+          <app-w-shopadmin-list (updated)="onShopAdminsUpdated()" label="Managers" [(shopAdminList)]="shopAdmins">
+          </app-w-shopadmin-list>
+        </div>
+
+      </div>
+
+      <div class="form-group" [formGroup]="userform">
+        <label for="name">Name</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input formControlName="name" type="text" class="form-control" name="name" [(ngModel)]="shop.name" required
+          placeholder="Required">
+
+        <control-messages [control]="userform.controls.name"></control-messages>
+
+        <!--div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty">
+              <i class="fa fa-exclamation-triangle"></i> Name is required
+            </div -->
+
+      </div>
+
+      <div>
+        <div class="form-group" [formGroup]="shopExtForm">
+          <label for="shop_ext_tradeName">Trade Name</label>
+
+          <input formControlName="brn" type="text" class="form-control" name="shop_ext_tradeName"
+            id="shop_ext_tradeName" [(ngModel)]="shopExt.tradeName.stringValue">
+
+          <control-messages [control]="shopExtForm.controls.tradeName"></control-messages>
+        </div>
+      </div>
+
+      <div class="form-group" [formGroup]="userform">
+        <label for="description">Description</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+        <textarea pInputTextarea type="text" formControlName="description" class="form-control" name="description"
+          [(ngModel)]="shop.description" required></textarea>
+        <!--
+            <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['description'].valid&&userform.controls['description'].dirty">
+              <i class="fa fa-exclamation-triangle"></i> Description is required
+            </div>
+            -->
+
+        <control-messages [control]="userform.controls.description"></control-messages>
+
+      </div>
+
+
+      <div>
+        <div class="form-group" [formGroup]="shopExtForm">
+          <label for="brn">BRN (if registered)</label>
+          <input formControlName="brn" type="text" class="form-control" name="brn"
+            [(ngModel)]="shopExt.brn.stringValue">
+
+          <control-messages [control]="shopExtForm.controls.brn"></control-messages>
+        </div>
+
+        <div class="form-group" [formGroup]="shopExtForm">
+          <label for="vatNumber">VAT Number (if registered)</label>
+          <input formControlName="vatNumber" type="text" class="form-control" name="vatNumber"
+            [(ngModel)]="shopExt.vatNumber.stringValue">
+
+          <control-messages [control]="shopExtForm.controls.vatNumber"></control-messages>
+        </div>
+      </div>
+
+      <div class="form-group" [formGroup]="userform">
+        <label for="website">Web Site</label>
+        <input formControlName="website" type="text" class="form-control" name="website" [(ngModel)]="shop.website">
+
+        <control-messages [control]="userform.controls.website"></control-messages>
+
+        <!--div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty">
+              <i class="fa fa-exclamation-triangle"></i> Name is required
+            </div -->
+
+      </div>
+
+      <div *ngIf="saleVoucherShop">
+        <div class="form-group" [formGroup]="saleVoucherForm">
+          <label for="shopType">Sale Voucher</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <select formControlName="enabled" class="form-control" id="saleVoucherEnabled" required
+            [(ngModel)]="saleVoucherShop.enabled.booleanValue" name="saleVoucherEnabled">
+            <option [ngValue]="true">Enabled</option>
+            <option [ngValue]="false">Disabled</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="shopExt">
+        <div class="form-group" [formGroup]="shopExtForm">
+          <label for="shop_ext_adult">Access to 18 and above only</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <select formControlName="adult" class="form-control" id="shop_ext_adult" required
+            [(ngModel)]="shopExt.adult.booleanValue" name="shop_ext_adult">
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+          </select>
+        </div>
+
+        <div class="form-group" [formGroup]="shopExtForm" *ngIf="isAdmin">
+          <label for="shop_ext_plan">Subscription Plan</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <select formControlName="plan" class="form-control" id="shop_ext_plan" required name="shop_ext_plan">
+            <option [ngValue]="'STARTER'">STARTER</option>
+            <option [ngValue]="'ARTIST'">ARTIST</option>
+            <option [ngValue]="'STANDARD'">STANDARD</option>
+            <option [ngValue]="'ENTERPRISE'">ENTERPRISE</option>
+            <option [ngValue]="'PREMIUM'">PREMIUM</option>
+            <option [ngValue]="'DISTRIBUTOR'">DISTRIBUTOR</option>
+          </select>
+        </div>
+        <div class="form-group" [formGroup]="shopExtForm" *ngIf="isAdmin">
+          <label for="shop_ext_is_featured">Featured on home screen</label>
+          <select formControlName="isFeatured" class="form-control" id="shop_ext_is_featured" required
+            name="shop_ext_is_featured">
+            <option [ngValue]="true">Yes</option>
+            <option [ngValue]="false">No</option>
+          </select>
+        </div>
+        <div>
+          <a href="https://uwin.mu/terms_conditions.php" target="_blank">Terms &amp; Conditions</a>
+        </div>
+      </div>
+    </md-card>
+
+    <md-card *ngIf="isAdmin">
+      <h3>Call to action buttons</h3>
+      <div class="form-group" [formGroup]="shopExtForm">
+        <label for="shop_ext_online_catalog_button">Online Catalog</label>
+        <select formControlName="onlineCatalogButton" class="form-control" id="shop_ext_online_catalog_button" required
+          name="shop_ext_online_catalog_button">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+      <div class="form-group" [formGroup]="shopExtForm">
+        <label for="shop_ext_catalog_button">Catalog</label>
+        <select formControlName="catalogButton" class="form-control" id="shop_ext_catalog_button" required
+          name="shop_ext_catalog_button">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+      <div class="form-group" [formGroup]="shopExtForm">
+        <label for="shop_ext_buy_now">Buy now button</label>
+        <select formControlName="buyNowButton" class="form-control" id="shop_ext_buy_now" required
+          name="shop_ext_buy_now">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+    </md-card>
+
+    <md-card *ngIf="isAdmin && isSport">
+      <h3>Tabs Panes</h3>
+      <div [formGroup]="shopExtForm">
+        <div formArrayName="tabs">
+          <div *ngFor="let tab of tabs.controls; let i = index" [formGroupName]="i" style="border: 1px solid  #f5dbb2; padding: 8px; margin: 8px 0 8px;">
+            <div class="form-group">
+              <label for="brn">Tab #{{i+1}}</label>
+              <input formControlName="label" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="brn">Tab Content #{{i+1}}</label>
+              <input formControlName="content" type="text" class="form-control">
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-card>
+
+    <md-card *ngIf="canEcommerce">
+      <h3>Logistic Provider</h3>
+
+      <div class="form-group">
+        <label class="my-1 mr-2">Available logistic provider</label>
+
+        <div class="form-control" style="height: auto;">
+          <label *ngFor="let lp of logisticProvidersShops" style="width: 33.3%; padding: 8px 0;">
+            <input name="shop_ext_logistic_provider_{{ lp.id }}" type="checkbox" style="margin-right: 10px;"
+              [(ngModel)]="getLogisticProviderMapEntry(lp).booleanValue">
+            {{ lp.name }}
+          </label>
+        </div>
+        <p style="margin-top: 20px; font-style: italic; color: grey;" *ngIf="isAdmin">Note: Logistic providers should be
+          <strong>ACTIVE</strong> &amp; have
+          at least <strong>1 POS</strong> to appear as delivery method in uWin.mu app</p>
+      </div>
+
+      <div class="form-group">
+        <label class="my-1 mr-2" for="shop_details_form_free_shipping_amount">Free Shipping</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input type="checkbox" name="shop_details_form_free_shipping_enabled"
+                [(ngModel)]="shopExt.freeShippingEnabled.booleanValue">
+            </div>
+          </div>
+          <input type="number" class="form-control" id="shop_details_form_free_shipping_amount"
+            name="shop_details_form_free_shipping_amount" placeholder="Minimum Amount For Free Shipping"
+            [ngModel]="(shopExt.freeShippingThreshold.integerValue / 100)"
+            (change)="shopExt.freeShippingThreshold.integerValue = numberToCurrency($event.target.value)"
+            [disabled]="!shopExt.freeShippingEnabled.booleanValue">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="my-1 mr-2" for="shop_details_form_handling_fee_amount">Handling Fee</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input type="checkbox" name="shop_details_form_handling_fee_enabled"
+                [(ngModel)]="shopExt.handlingFeeEnabled.booleanValue">
+            </div>
+          </div>
+          <input type="number" class="form-control" name="shop_details_form_handling_fee_amount"
+            [ngModel]="(shopExt.handlingFeeAmount.integerValue / 100)"
+            (change)="shopExt.handlingFeeAmount.integerValue = numberToCurrency($event.target.value)"
+            id="shop_details_form_handling_fee_amount" placeholder="Handling Fee Amount"
+            [disabled]="!shopExt.handlingFeeEnabled.booleanValue">
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="shopExt.handlingFeeEnabled.booleanValue">
+        <label class="my-1 mr-2" for="shop_details_form_no_handling_amount">No Handling Fee</label>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <div class="input-group-text">
+              <input type="checkbox" name="shop_details_form_no_handling_enabled"
+                [(ngModel)]="shopExt.noHandlingFeeEnabled.booleanValue">
+            </div>
+          </div>
+          <input type="number" class="form-control" id="shop_details_form_no_handling_amount"
+            [ngModel]="(shopExt.noHandlingFeeThreshold.integerValue / 100)"
+            (change)="shopExt.noHandlingFeeThreshold.integerValue = numberToCurrency($event.target.value)"
+            [disabled]="!shopExt.noHandlingFeeEnabled.booleanValue" name="shop_details_form_no_handling_amount"
+            placeholder="Minimum Amount For No Handling Fee">
+        </div>
+      </div>
+    </md-card>
+
+    <md-card>
+      <h3>Loyalty</h3>
+
+      <div class="form-group" [formGroup]="shopExtForm">
+        <label for="shop_ext_plan">Status</label>
+        <select formControlName="hasLoyalty" class="form-control" id="shop_ext_currency"
+          [(ngModel)]="shopExt.hasLoyalty.booleanValue" name="shop_ext_currency">
+          <option [ngValue]="false">Disabled</option>
+          <option [ngValue]="true">Enabled</option>
+        </select>
+      </div>
+
+      <div style="display: flex; flex-direction: row; justify-content: space-between; margin: -10px">
+        <div style="flex: 1; margin: 10px">
+          <div class="form-group" [formGroup]="shopExtForm">
+            <label for="shop_ext_currency_amount">Rs</label>
+            <input formControlName="currencyAmount" type="number" class="form-control" name="shop_ext_currency_amount"
+              [(ngModel)]="shopExt.currencyAmount.integerValue">
+          </div>
+        </div>
+
+        <div style="flex: 1; margin: 10px">
+          <div class="form-group" [formGroup]="shopExtForm">
+            <label for="shop_ext_point_amount">Points</label>
+            <input formControlName="pointAmount" type="number" class="form-control" name="shop_ext_point_amount"
+              [(ngModel)]="shopExt.pointAmount.integerValue">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" [formGroup]="shopExtForm">
+        <label for="shop_ext_loyalty_shop_id">Loyalty Shop</label>
+        <select formControlName="loyaltyShopId" class="form-control" id="shop_ext_loyalty_shop_id"
+          [(ngModel)]="shopExt.loyaltyShopId.stringValue" name="shop_ext_loyalty_shop_id" [disabled]="!isAdmin">
+          <option *ngFor="let lsh of loyaltyShops" [ngValue]="lsh.id">{{lsh.name}}</option>
+        </select>
+      </div>
+
+    </md-card>
+    <!-- <md-card>
+      <h3>Promotion</h3> (according to client's status)
+
+      <div style="display:flex;flex-direction:row;justify-content:space-between">
+        <div class="form-group" [formGroup]="userform">
+          <label for="silver">Silver</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+          <input [disabled]="!isAdmin" maxValue="1400" minValue="100" step="0.1" formControlName="silver" type="number"
+            class="form-control" name="silver" [(ngModel)]="shop.statusDiscount.SILVER" [required]="isAdmin"
+            placeholder="Silver discount">
+          <control-messages [control]="userform.controls.silver"></control-messages>
+        </div>
+
+        <div class="form-group" [formGroup]="userform">
+          <label for="gold">Gold</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+          <input maxValue="100" minValue="100" step="0.1" formControlName="gold" type="number" class="form-control"
+            name="gold" [(ngModel)]="shop.statusDiscount.GOLD" required placeholder="Gold discount">
+          <control-messages [control]="userform.controls.gold"></control-messages>
+
+        </div>
+
+        <div class="form-group" [formGroup]="userform">
+          <label for="premium">Premium</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+          <input maxValue="100" minValue="100" step="0.1" formControlName="premium" type="number" class="form-control"
+            name="premium" [(ngModel)]="shop.statusDiscount.PREMIUM" required placeholder="Premium discount">
+          <control-messages [control]="userform.controls.premium"></control-messages>
+        </div>
+      </div>
+    </md-card> -->
+
+    <!--
+
+        <md-card>
+          <h3>Promotion</h3>
+
+          <div style="display:flex;flex-direction:row;justify-content:space-between">
+            <div class="form-group" [formGroup]="userform">
+              <label for="silver">Silver</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+                <input maxValue="100" minValue="100" step="0.1" formControlName="silver" type="number" class="form-control" name="silver" [(ngModel)]="shop.statusDiscount.SILVER" required placeholder="Silver discount">
+                <control-messages [control]="userform.controls.silver"></control-messages>     
+            </div>
+
+            <div class="form-group" [formGroup]="userform">
+              <label for="gold">Gold</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+              <input maxValue="100" minValue="100" step="0.1" formControlName="gold" type="number" class="form-control" name="gold" [(ngModel)]="shop.statusDiscount.GOLD" required placeholder="Gold discount">
+              <control-messages [control]="userform.controls.gold"></control-messages>
+
+            </div>
+
+            <div class="form-group" [formGroup]="userform">
+              <label for="premium">Premium</label><div class="tooltip">*<span class="tooltiptext">Required</span></div>
+
+                <input maxValue="100" minValue="100" step="0.1" formControlName="premium" type="number" class="form-control" name="premium" [(ngModel)]="shop.statusDiscount.PREMIUM" required placeholder="Premium discount">
+                <control-messages [control]="userform.controls.premium"></control-messages>
+            </div>
+          </div>
+        </md-card>
+
+      -->
+
+    <!--
+        <md-card>
+          <h3>Localization</h3>
+
+
+          <div style="display:flex;flex-direction:row;float:right">
+            <div class="form-group" [formGroup]="userform">
+              <label for="latitude">latitude</label>
+              <input formControlName="latitude" type="text" class="form-control" name="latitude" [(ngModel)]="shop.lat" required>
+            </div>
+
+            <div class="form-group" [formGroup]="userform">
+              <label for="longitude">longitude</label>
+              <input formControlName="longitude" type="text" class="form-control" name="longitude" [(ngModel)]="shop.lng" required>
+            </div>
+          </div>
+          <p-gmap #gmap [overlays]="mapOverlays" [options]="mapOptions" [style]="{'width':'100%','height':'320px'}" (onOverlayDragEnd)="handleDragEnd($event)"></p-gmap>
+
+
+          <div style="display:flex;flex-direction:row;margin-top:10px;justify-content:space-between">
+            <div class="form-group" style="margin-right:10px" [formGroup]="userform">
+              <label for="city">City</label>
+              <select formControlName="city" class="form-control" id="city" required [(ngModel)]="shop.city" name="city" (ngModelChange)="onCityChange($event)">
+            <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
+        </select>
+            </div>
+            <div class="form-group" style="margin-right:10px; flex-grow:5" [formGroup]="userform">
+              <label for="address">Address <a style="cursor:pointer" (click)="getGeocoding(gmap.getMap())"><i   class="fa fa-dot-circle-o" aria-hidden="true" style="float:right; margin:3px 0px 0px 5px"></i></a> </label>
+              <input formControlName="address" type="text" class="form-control" name="address" [(ngModel)]="shop.address" required placeholder="Required">
+              <control-messages [control]="userform.controls.address"></control-messages>
+            </div>
+            <div class="form-group" style="" [formGroup]="userform">
+              <label for="tel">Phone</label><br/>
+              <input formControlName="tel" type="number" class="form-control" name="tel" [(ngModel)]="shop.tel" required placeholder="Required">
+              <control-messages [control]="userform.controls.tel"></control-messages>
+
+            </div>
+
+          </div>
+        </md-card>
+
+-->
+    <md-card>
+
+      <h3>Media</h3>
+
+
+      <div *ngIf="!shop.id">Save data first. before uploading pictures</div>
+
+      <div *ngIf="shop.id">
+
+        <div style="display:flex;flex-direction:row;margin-left:auto">
+
+          <div></div>
+
+          <div>
+            <input type="file" (change)="fileChangeEvent($event)" name="fileUpload" id="fileUpload"
+              placeholder="Upload file..." />
+          </div>
+
+          <div style="margin-left: auto;">
+
+            <button md-raised-button (click)="upload()" [disabled]="!canUpload()">Upload</button>
+          </div>
+
+        </div>
+
+        <div>
+
+          <p-carousel headerText="Photos" [value]="shop.photoPath">
+            <template let-path>
+              <div>
+                <div>
+                  <div style="text-align:center"><img [src]="getPhotoFolder(path)" /></div>
+                </div>
+                <div>
+                  <div>
+                    <a style="cursor:pointer" (click)="removePhoto(path)"><i class="fa fa-trash" aria-hidden="true"
+                        style="float:right; margin:3px 0px 0px 5px"></i></a>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </p-carousel>
+
+        </div>
+      </div>
+    </md-card>
+
+
+    <!--
+        <md-card>
+          <h3>Wifi Station</h3>
+
+          <div style="display: flex; flex-direction: row;">
+            <div class="form-group" [formGroup]="userform">
+              <label for="macAddress" style="width: 180px;">MAC Address</label>
+
+[disabled]
+              <input formControlName="macAddress" type="text" class="form-control" name="macAddress" [(ngModel)]="wifiStation.macAddress" placeholder="Required">
+
+              <control-messages [control]="userform.controls.macAddress"></control-messages>
+            </div>
+
+            <div style="margin-left: auto;" [formGroup]="userform">
+              <p-checkbox formControlName="open" binary="true" label="Wifi is shared" [(ngModel)]="wifiStation.open" name="open" (onChange)="openWifiChanged()"></p-checkbox>
+            </div>
+
+          </div>
+
+
+          <div style="margin-top:10px;  display: flex; flex-direction: row">
+            <div style="display: flex; flex-direction: column; flex-grow: 1; width:20%">
+
+              <div class="form-group" [formGroup]="userform">
+                <label style="width:100%" for="pwd">Password</label>
+
+
+                <input formControlName="pwd" type="text" class="form-control" name="pwd" [(ngModel)]="wifiStation.pwd" [disabled]="!wifiStation.open" placeholder="Required">
+                <control-messages [control]="userform.controls.pwd"></control-messages>
+              </div>
+
+
+
+              <div class="form-group" [formGroup]="userform">
+
+                <label style="width:100%" for="usageLimit">Usage limit (in minutes)</label>
+                <input formControlName="usageLimit" type="number" class="form-control" name="usageLimit" [(ngModel)]="wifiStation.usageLimit" [disabled]="!wifiStation.open" placeholder="Unlimited">
+
+              </div>
+            </div>
+
+            <div style="flex-grow: 40; margin-left:10px">
+
+              <div class="form-group" [formGroup]="userform">
+                <label for="usageText">Welcome text</label>
+                <textarea formControlName="usageText"  pInputTextarea type="text" class="form-control" name="usageText" [(ngModel)]="wifiStation.usageText" [disabled]="!wifiStation.open"></textarea>
+
+              </div>
+            </div>
+
+          </div>
+
+
+
+        </md-card>
+ -->
+
+  </form>
+
+
+  <md-card>
+
+    <div style="display:flex;flex-direction:row;justify-content:space-around;">
+
+
+      <div>
+        <!--button md-raised-button color="warn" (click)="onDelete()" [disabled]="!shop.id">Delete</button-->
+        <button md-raised-button color="primary" (click)="onCancel();" [disabled]="isCancelDisabled()">Cancel</button>
+        <button md-raised-button color="primary" (click)="onSubmit()" [disabled]="isSaveDisabled()">Save</button>
+      </div>
+    </div>
+  </md-card>
+
+  <!--
+      <md-card>
+
+  <div style="display:flex;flex-direction:row;justify-content:space-around;">
+
+    <div>
+      <button md-raised-button color="primary" (click)="goBack()">Back</button>
+    </div>
+
+    <div>
+
+
+      <button md-raised-button color="primary" (click)="onSubmit()" [disabled]="!userform.valid">Save</button>
+
+    </div>
+  </div>
+</md-card>
+-->
+</div>
+<!--
+    </p-tabPanel>
+    <p-tabPanel header="Catalog" *ngIf="shop.id">
+      <app-item-list idShop="{{shop.id}}"></app-item-list>
+    </p-tabPanel>
+    <p-tabPanel header="Flash Sells" *ngIf="shop.id">
+      <app-flashsell-list idShop="{{shop.id}}" refreshMe="{{refreshFlashsells}}"></app-flashsell-list>
+    </p-tabPanel>
+    <p-tabPanel header="Coupons" *ngIf="shop.id">
+      <app-coupon-list idShop="{{shop.id}}" refreshMe="{{refreshCoupons}}"></app-coupon-list>
+    </p-tabPanel>       
+    <p-tabPanel header="Vouchers" *ngIf="shop.id">
+      <app-voucher-list [idShop]="shop.id"></app-voucher-list>
+    </p-tabPanel>     
+  </p-tabView>
+-->

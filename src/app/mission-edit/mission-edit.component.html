@@ -1,0 +1,84 @@
+<ng-container *ngIf="mission$ | async">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <md-card [formGroup]="form">
+      <div style="text-align: center; flex-grow: 1">
+        <h3 style="text-align: center">Edit Mission</h3>
+      </div>
+      <div class="form-group">
+        <label for="name">Title</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input formControlName="title" type="text" class="form-control" name="title" required />
+      </div>
+      <div class="form-group">
+        <label for="name">Reward</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <select formControlName="rewardType" required class="form-control">
+          <option value="">Please select</option>
+          <option value="voucherGroup">Voucher Group</option>
+          <option value="myVoicePoint">myVoice Points</option>
+          <option value="uWinToken">uWin Tokens</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="showVouchersGroups$ | async">
+        <label for="name">Voucher Group</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <ng-container *ngIf="vouchersGroups$ | async">
+          <select formControlName="voucherGroup" required class="form-control">
+            <option value="">Please select</option>
+            <option *ngFor="let vg of vouchersGroups" [value]="vg.id">
+              {{ vg.name }}
+            </option>
+          </select>
+        </ng-container>
+      </div>
+      <div class="form-group" *ngIf="showPoints$ | async">
+        <label for="name">myVoice Points</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input formControlName="points" type="number" class="form-control" name="points" />
+      </div>
+      <div class="form-group" *ngIf="showTokens$ | async">
+        <label for="name">uWin Tokens</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input formControlName="tokens" type="number" class="form-control" name="tokens" />
+      </div>
+      <div class="form-group">
+        <label for="name">Task</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <select formControlName="task" required class="form-control">
+          <option value="">Please select</option>
+          <option value="createAccount">Create Account</option>
+          <option value="completeProfile">Complete Profile</option>
+          <option value="questionnaire">Questionnaire</option>
+        </select>
+      </div>
+      <div class="form-group" *ngIf="showUrl$ | async">
+        <label for="name">Questionnaire URL</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <input formControlName="url" type="text" class="form-control" name="url" />
+      </div>
+      <div class="form-group">
+        <label for="name">Active</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <select formControlName="isActive" required class="form-control">
+          <option value="">Please select</option>
+          <option [value]="true">Active</option>
+          <option [value]="false">Inactive</option>
+        </select>
+      </div>
+    </md-card>
+
+    <md-card>
+      <div style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+        ">
+        <div>
+          <button md-raised-button color="primary" type="submit" [disabled]="disabledBtn">
+            Save
+          </button>
+        </div>
+      </div>
+    </md-card>
+  </form>
+</ng-container>

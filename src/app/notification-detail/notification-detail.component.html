@@ -1,0 +1,16 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" placeholder="Notification title" formControlName="title">
+    </div>
+    <div class="form-group">
+      <label for="message">Message</label>
+      <textarea class="form-control" id="message" placeholder="Notification body text"
+        formControlName="message"></textarea>
+    </div>
+    <button md-raised-button color="primary" [disabled]="!form.valid || showSpinner">Send</button>
+  </form>
+</md-card>

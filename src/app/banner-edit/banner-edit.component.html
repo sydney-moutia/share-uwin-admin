@@ -1,0 +1,78 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+  <div style="display:flex;flex-direction:row;">
+    <div>
+      <button md-raised-button color="primary" (click)="onGoBack()">Back</button>
+    </div>
+    <div style="flex-grow:1; justify-content:center">
+      <h3 style="text-align:center"> Home Banner </h3>
+    </div>
+  </div>
+</md-card>
+
+<ng-container *ngIf="banner$ | async">
+  <md-card>
+    <h3>Media</h3>
+    <div style="display:flex;flex-direction:row;margin-left:auto">
+      <div>
+        <input type="file" (change)="fileChangeEvent($event)" name="fileUpload" id="fileUpload"
+          placeholder="Upload file..." />
+      </div>
+      <div style="margin-left: auto;">
+        <button md-raised-button (click)="upload()" [disabled]="!canUpload()">Upload</button>
+      </div>
+    </div>
+
+    <div *ngIf="banner">
+      <div>
+        <div style="padding: 16px; text-align: center;">
+          <div style="text-align:center"><img style="max-width: 100%" [src]="banner.downloadUrl" /></div>
+        </div>
+        <!-- <div>
+          <div>
+            <a style="cursor:pointer" (click)="removePhoto(path)"><i class="fa fa-trash" aria-hidden="true"
+                style="float:right; margin:3px 0px 0px 5px"></i></a>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </md-card>
+
+  <form [formGroup]="form">
+    <md-card>
+      <h3>Details</h3>
+
+      <div class="form-group" *ngIf="shopTypes$ | async">
+        <label for="itemNormalPrice">Link to</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <select formControlName="uri" class="form-control" id="uri" required name="uri">
+          <option *ngFor="let link of links" [value]="link.uri">{{ link.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="shop_ext_adult">Published</label>
+        <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+        <select formControlName="published" class="form-control" id="published" required name="published">
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+    </md-card>
+
+    <md-card>
+      <div style="display:flex;flex-direction:row;justify-content:space-around;">
+        <div>
+          <button md-raised-button color="default" (click)="onGoBack();">Cancel</button>
+          <button md-raised-button color="primary" (click)="submit()" [disabled]="!form.valid">Save</button>
+        </div>
+      </div>
+    </md-card>
+
+  </form>
+</ng-container>
+
+<p style="padding: 16px; text-align: center;" *ngIf="!banner">
+  Please wait...
+</p>

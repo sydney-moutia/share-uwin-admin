@@ -1,0 +1,41 @@
+<p-growl [value]="msgs"></p-growl>
+
+<md-card>
+    <div style="display:flex;flex-direction:row;">
+        <div>
+            <button md-raised-button color="primary" (click)="onGoBack()" >Back</button>
+    </div>
+    <div style="text-align: center;flex-grow:1;">
+    <h3 style="text-align:center"> Shop Types Listing
+        <span (click)="onNewShopType()" style="cursor:pointer">
+            <i class="fa fa-plus-circle" aria-hidden="true" style="float:right; margin:4px 4px 0 0" ></i>
+        </span>
+
+    </h3>
+    </div>
+    </div>
+</md-card>
+
+<md-card class="spaced">
+
+
+    <div class="ui-widget-header ui-helper-clearfix" style="border-bottom: 0 none">
+        <i class="fa fa-search" style="float:left; margin:4px 4px 0 0"></i>
+        <input #gb type="text" pInputText size="50" style="float:left" placeholder="Global Filter">
+
+
+    </div>
+
+</md-card>
+
+
+
+<p-dataTable [value]="shopTypes" sortMode="multiple" [rows]="40" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,40,80]"
+    selectionMode="single" [(selection)]="selectedShopType" (onRowSelect)="onRowSelect($event)" [globalFilter]="gb" resizableColumns="">
+    <p-column field="name" header="Name" [sortable]="true"></p-column>
+    <p-column field="position" header="Position" [sortable]="true"></p-column>
+</p-dataTable>
+
+<div >
+    <app-shoptype-detail [shopType]="selectedShopType" (saved)="savedShopType($event)" (deleted)="deletedShopType($event)"></app-shoptype-detail> 
+</div>

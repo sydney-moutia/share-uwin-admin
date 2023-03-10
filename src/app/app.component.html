@@ -1,0 +1,80 @@
+<!--md-sidenav-layout fullscreen>
+
+
+  <md-toolbar color="primary">
+    <button class="app-icon-button" (click)="sidenav.toggle()">
+        <i class="material-icons app-toolbar-menu">menu</i>
+      </button> {{title}}
+
+    <span class="app-toolbar-filler"></span>
+  </md-toolbar>
+
+    <md-sidenav #sidenav mode="side" class="app-sidenav">
+      <div class="centered-title"><h2>Menu</h2></div>
+       <hr/>
+      <md-nav-list>
+        <md-list-item>
+          <i class="fa fa-shopping-basket" aria-hidden="true" style="margin:0px 5px 0px 0px"></i>
+          <a [routerLink]="['/shops']">Shops</a>
+          </md-list-item>
+          <md-list-item>
+          <i class="fa fa-user" aria-hidden="true" style="margin:0px 5px 0px 0px"></i>
+          <a [routerLink]="['/users']">Users</a>
+        </md-list-item>     
+          <md-list-item>
+          <i class="fa fa-user" aria-hidden="true" style="margin:0px 5px 0px 0px"></i>
+          <a [routerLink]="['/shopadmins']">Shop Managers</a>
+        </md-list-item>          
+        
+      </md-nav-list>
+    </md-sidenav>
+
+
+    <div class="app-content">
+      <router-outlet></router-outlet>
+    </div>
+
+</md-sidenav-layout-->
+
+<div class="primaryBg" style="padding: 4px 4px 4px 4px;text-align: center;width: 100%;margin: auto;font-size: 12px; background: primary">
+    <table style="width: 100%" border="0">
+      <tr>
+        <td style="text-align: left">
+          <div style="text-align: center">
+                <a href="/#/menu"><img width="60px" src="../assets/ic_logo-web.png"/></a>
+                <span style="color:white; font-weight: bold; font-size: 14px">U Win</span>
+                
+          </div>
+        </td>
+
+        <td style="width: 100%"></td>
+
+        <td style="width: 1%">
+          <table>
+            <tr>
+
+
+              <td nowrap style="text-align: right;">Rue de l'Institut - Ebène - Mauritius <br/> 	&#9742; +230 202 00 55<br/>
+                <A HREF="mailto:assistance@uwin.mu">assistance@uwin.mu</A><br/>
+
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+
+
+    </table>
+  </div>
+
+  
+
+<div *ngIf="isLoggedIn()" class="primaryLightBg" style="font-size: 12px; float:right; padding: 3px 5px 3px 5px;"><a style="color: white !important" href="/">Log out</a></div>
+
+
+
+    <div class="app-content">
+      <router-outlet></router-outlet>
+    </div>
+

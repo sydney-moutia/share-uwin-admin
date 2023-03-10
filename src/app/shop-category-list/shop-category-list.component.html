@@ -1,0 +1,52 @@
+<md-card>
+  <div style="display: flex; flex-direction: row">
+    <div>
+      <app-go-back-button></app-go-back-button>
+    </div>
+
+    <div style="flex-grow: 1; justify-content: center">
+      <h3 style="text-align: center">
+        Categories
+        <a routerLink="new">
+          <i
+            class="fa fa-plus-circle"
+            aria-hidden="true"
+            style="float: right; margin: 4px 4px 0 0"
+          ></i>
+        </a>
+      </h3>
+    </div>
+  </div>
+</md-card>
+
+<div
+  style="display: flex; flex-direction: column; margin-top: 16px"
+  *ngIf="categories$ | async"
+>
+  <div>
+    <p-dataTable
+      [value]="categories"
+      sortMode="multiple"
+      [rows]="40"
+      [paginator]="true"
+      [pageLinks]="3"
+      [rowsPerPageOptions]="[20, 40, 80]"
+      selectionMode="single"
+      (onRowSelect)="onRowSelect($event)"
+    >
+      <p-column field="position" header="Position" [sortable]="false"></p-column>
+      <p-column field="title" header="Title" [sortable]="false">
+        <template let-cat="rowData"  pTemplate type="body">
+          {{ getFullCatName(cat) }}
+        </template>
+      </p-column>
+      <p-column field="subtitle" header="Subtitle" [sortable]="false"></p-column>
+    </p-dataTable>
+  </div>
+</div>
+
+<div *ngIf="showPreloader">
+  <p style="text-align: center; padding: 16px">One monent please.</p>
+</div>
+
+<router-outlet (deactivate)="fetchCategories()"></router-outlet>

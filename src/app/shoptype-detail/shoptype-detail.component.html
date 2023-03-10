@@ -1,0 +1,163 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="shopType">
+  <md-card>
+    <form>
+      <div>
+        <div [formGroup]="userformShopType">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <div class="tooltip">
+              *<span class="tooltiptext">Required</span>
+            </div>
+            <input
+              formControlName="name"
+              type="text"
+              class="form-control"
+              name="name"
+              required
+              placeholder="Required"
+            />
+            <control-messages
+              [control]="userformShopType.controls.name"
+            ></control-messages>
+          </div>
+          <div class="form-group">
+            <label for="position">Position</label>
+            <div class="tooltip">
+              *<span class="tooltiptext">Required</span>
+            </div>
+            <input
+              id="position"
+              formControlName="position"
+              type="number"
+              class="form-control"
+              name="position"
+              required
+              placeholder="Required"
+            />
+            <control-messages
+              [control]="userformShopType.controls.position"
+            ></control-messages>
+          </div>
+          <div class="form-group">
+            <label for="publishOnWin">Publish on uWin</label>
+            <div class="tooltip">
+              *<span class="tooltiptext">Required</span>
+            </div>
+            <select
+              class="form-control"
+              id="publishOnWin"
+              formControlName="publishedOnWin"
+            >
+              <option [value]="false">Non</option>
+              <option [value]="true">Oui</option>
+            </select>
+            <control-messages
+              [control]="userformShopType.controls.name"
+            ></control-messages>
+          </div>
+        </div>
+      </div>
+    </form>
+  </md-card>
+
+  <ng-container *ngIf="true">
+    <md-card>
+      <h3>Featured Image</h3>
+      <div style="display: flex; flex-direction: row; margin-left: auto">
+        <div>
+          <input
+            type="file"
+            (change)="fileChangeEvent($event)"
+            name="fileUpload"
+            id="fileUpload"
+            placeholder="Upload file..."
+          />
+        </div>
+        <div style="margin-left: auto">
+          <button md-raised-button (click)="upload()" [disabled]="!canUpload()">
+            Upload
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="imageUrl">
+        <div>
+          <div style="padding: 16px; text-align: center">
+            <div style="text-align: center">
+              <img style="max-width: 100%" [src]="imageUrl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-card>
+  </ng-container>
+
+  <ng-container *ngIf="true">
+    <md-card>
+      <h3>Icon</h3>
+      <div style="display: flex; flex-direction: row; margin-left: auto">
+        <div>
+          <input
+            type="file"
+            (change)="iconChangeEvent($event)"
+            name="iconUpload"
+            id="iconUpload"
+            placeholder="Upload icon..."
+          />
+        </div>
+        <div style="margin-left: auto">
+          <button md-raised-button (click)="uploadIcon()" [disabled]="!canUploadIcon()">
+            Upload
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="iconUrl">
+        <div>
+          <div style="padding: 16px; text-align: center">
+            <div style="text-align: center">
+              <img style="max-width: 100%" [src]="iconUrl" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </md-card>
+  </ng-container>
+
+  <md-card>
+    <div
+      style="display: flex; flex-direction: row; justify-content: space-around"
+    >
+      <div>
+        <button
+          md-raised-button
+          color="warn"
+          (click)="onDelete()"
+          [disabled]="!shopType.id || idCurrentShopType === shopType.id"
+        >
+          Delete
+        </button>
+        <button
+          md-raised-button
+          color="primary"
+          (click)="onCancel()"
+          [disabled]="!shopType.id || !userformShopType.dirty"
+        >
+          Cancel
+        </button>
+        <button
+          md-raised-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="!userformShopType.valid || !userformShopType.dirty"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </md-card>
+
+</div>
+

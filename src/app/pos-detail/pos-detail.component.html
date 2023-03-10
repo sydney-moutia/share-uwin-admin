@@ -1,0 +1,212 @@
+<p-growl [value]="msgs"></p-growl>
+
+<div *ngIf="pos">
+
+  <md-card>
+    <div style="display:flex;flex-direction:row;">
+
+      <div style="flex-grow:1; justify-content:center">
+        <h3 style="text-align:center"> {{pos.name}} </h3>
+      </div>
+    </div>
+
+  </md-card>
+
+
+  <form id="userform">
+    <md-card class="app-input-section" style="margin-top:0px">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group" [formGroup]="userform">
+            <label for="name">Name</label>
+            <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+            <input formControlName="name" type="text" class="form-control" name="name" [(ngModel)]="pos.name" required
+              placeholder="Required">
+            <control-messages [control]="userform.controls.name"></control-messages>
+          </div>
+
+          <div class="form-group" [formGroup]="userform">
+            <label for="description">Description</label>
+            <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+            <textarea pInputTextarea type="text" formControlName="description" class="form-control" name="description"
+              [(ngModel)]="pos.description" required></textarea>
+            <control-messages [control]="userform.controls.description"></control-messages>
+          </div>
+
+          <div class="form-group" [formGroup]="userform">
+            <label for="website">Web Site</label>
+            <input formControlName="website" type="text" class="form-control" name="website" [(ngModel)]="pos.website">
+            <control-messages [control]="userform.controls.website"></control-messages>
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="qrCodeUrl">
+          <img [src]="qrCodeUrl" style="max-width: 100%; height:auto; margin-bottom: 8px" width="1024" height="1024">
+          <a [href]="qrCodeUrl" target="_blank" class="btn btn-warning btn-block">Download</a>
+        </div>
+      </div>
+    </md-card>
+
+
+
+    <md-card>
+      <h3>Localization</h3>
+      <div style="display:flex;flex-direction:row;float:right">
+        <div class="form-group" [formGroup]="userform">
+          <label for="latitude">latitude</label>
+          <input formControlName="latitude" type="text" class="form-control" name="latitude" [(ngModel)]="pos.lat"
+            required>
+        </div>
+
+        <div class="form-group" [formGroup]="userform">
+          <label for="longitude">longitude</label>
+          <input formControlName="longitude" type="text" class="form-control" name="longitude" [(ngModel)]="pos.lng"
+            required>
+        </div>
+      </div>
+      <p-gmap #gmap [overlays]="mapOverlays" [options]="mapOptions" [style]="{'width':'100%','height':'320px'}"
+        (onOverlayDragEnd)="handleDragEnd($event)"></p-gmap>
+
+
+      <div style="display:flex;flex-direction:row;margin-top:10px;justify-content:space-between">
+        <div class="form-group" style="margin-right:10px" [formGroup]="userform">
+          <label for="city">City</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <select formControlName="city" class="form-control" id="city" required [(ngModel)]="pos.city" name="city"
+            (ngModelChange)="onCityChange($event)">
+            <option *ngFor="let city of cities" [ngValue]="city">{{city.name}}</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-right:10px; flex-grow:5" [formGroup]="userform">
+          <label for="address">Address <a style="cursor:pointer" (click)="getGeocoding(gmap.getMap())"><i
+                class="fa fa-dot-circle-o" aria-hidden="true" style="float:right; margin:3px 0px 0px 5px"></i></a>
+          </label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <input formControlName="address" type="text" class="form-control" name="address" [(ngModel)]="pos.address"
+            required placeholder="Required">
+          <control-messages [control]="userform.controls.address"></control-messages>
+        </div>
+        <div class="form-group" [formGroup]="userform">
+          <label for="tel">Phone</label>
+          <div class="tooltip">*<span class="tooltiptext">Required</span></div>
+          <input formControlName="tel" type="number" class="form-control" name="tel" [(ngModel)]="pos.tel" required
+            placeholder="Required">
+          <control-messages [control]="userform.controls.tel"></control-messages>
+        </div>
+
+      </div>
+    </md-card>
+
+
+    <md-card>
+
+      <h3>Media</h3>
+      <div *ngIf="!pos.id">Save data first. before uploading pictures</div>
+
+      <div *ngIf="pos.id">
+
+        <div style="display:flex;flex-direction:row;margin-left:auto">
+
+          <div></div>
+
+          <div>
+            <input type="file" (change)="fileChangeEvent($event)" name="fileUpload" id="fileUpload"
+              placeholder="Upload file..." />
+          </div>
+
+          <div style="margin-left: auto;">
+            <button md-raised-button (click)="upload()" [disabled]="!canUpload()">Upload</button>
+          </div>
+
+        </div>
+
+        <div *ngIf="pos.photoPath">
+
+          <p-carousel headerText="Photos" [value]="pos.photoPath">
+            <template let-path>
+              <div>
+                <div>
+                  <div style="text-align:center"><img [src]="getPhotoFolder(path)" /></div>
+                </div>
+                <div>
+                  <div>
+                    <a style="cursor:pointer" (click)="removePhoto(path)"><i class="fa fa-trash" aria-hidden="true"
+                        style="float:right; margin:3px 0px 0px 5px"></i></a>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </p-carousel>
+
+        </div>
+      </div>
+    </md-card>
+
+
+    <md-card>
+      <h3>Wifi Station</h3>
+      <div style="display: flex; flex-direction: row;">
+        <div class="form-group" [formGroup]="userform">
+          <label for="macAddress" style="width: 180px;">BSSID Address (case sensitive)</label>
+          <input formControlName="macAddress" type="text" class="form-control" name="macAddress"
+            [(ngModel)]="wifiStation.macAddress" placeholder="Required">
+
+          <control-messages [control]="userform.controls.macAddress"></control-messages>
+        </div>
+
+        <div style="margin-left: auto;" [formGroup]="userform">
+          <p-checkbox formControlName="open" binary="true" label="Wifi is shared" [(ngModel)]="wifiStation.open"
+            name="open" (onChange)="openWifiChanged()"></p-checkbox>
+        </div>
+
+      </div>
+
+
+      <div style="margin-top:10px;  display: flex; flex-direction: row">
+        <div style="display: flex; flex-direction: column; flex-grow: 1; width:20%">
+
+          <div class="form-group" [formGroup]="userform">
+            <label style="width:100%" for="pwd">Password</label>
+            <input formControlName="pwd" type="text" class="form-control" name="pwd" [(ngModel)]="wifiStation.pwd"
+              [disabled]="!wifiStation.open" placeholder="Required">
+            <control-messages [control]="userform.controls.pwd"></control-messages>
+
+          </div>
+
+
+
+          <div class="form-group" [formGroup]="userform">
+            <label style="width:100%" for="usageLimit">Usage limit (in minutes)</label>
+            <input formControlName="usageLimit" type="number" class="form-control" name="usageLimit"
+              [(ngModel)]="wifiStation.usageLimit" [disabled]="!wifiStation.open" placeholder="Unlimited">
+          </div>
+        </div>
+
+        <div style="flex-grow: 40; margin-left:10px">
+
+          <div class="form-group" [formGroup]="userform">
+            <label for="usageText">Welcome text</label>
+            <textarea formControlName="usageText" pInputTextarea type="text" class="form-control" name="usageText"
+              [(ngModel)]="wifiStation.usageText" [disabled]="!wifiStation.open"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </md-card>
+
+  </form>
+
+
+  <md-card>
+    <div style="display:flex;flex-direction:row;justify-content:space-around;">
+      <div>
+        <button md-raised-button color="warn" (click)="onDelete()" [disabled]="!pos.id">Delete</button>
+        <button md-raised-button color="primary" (click)="onCancel();"
+          [disabled]="!pos.id || !userform.dirty">Cancel</button>
+        <button md-raised-button color="primary" (click)="onSubmit()"
+          [disabled]="!userform.valid || !userform.dirty">Save</button>
+      </div>
+    </div>
+  </md-card>
+
+
+</div>
